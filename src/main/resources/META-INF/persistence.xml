@@ -7,6 +7,8 @@
     <class>org.itson.dominio.Tramite</class>
     <class>org.itson.dominio.Licencia</class>
     <class>org.itson.dominio.Placa</class>
+    <class>org.itson.dominio.Vehiculo</class>
+    <class>org.itson.dominio.Automovil</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/agencia_transportes?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
