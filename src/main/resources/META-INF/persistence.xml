@@ -4,6 +4,9 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>org.itson.dominio.Persona</class>
     <class>org.itson.dominio.Pago</class>
+    <class>org.itson.dominio.Tramite</class>
+    <class>org.itson.dominio.Licencia</class>
+    <class>org.itson.dominio.Placa</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/agencia_transportes?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
