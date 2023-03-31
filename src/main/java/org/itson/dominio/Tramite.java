@@ -7,12 +7,16 @@ package org.itson.dominio;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,7 +24,8 @@ import javax.persistence.TemporalType;
  *
  * @author Oscar
  */
-@MappedSuperclass
+@Entity
+@Table(name = "tramites")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Tramite implements Serializable {
 
@@ -35,6 +40,14 @@ public abstract class Tramite implements Serializable {
     
     @Column(name = "monto", nullable = false)
     protected Float monto;
+    
+    @ManyToOne()
+    @JoinColumn(name = "id_persona", nullable = true)
+    protected Persona persona;
+    
+    @OneToOne()
+    @JoinColumn(name = "id_pago", nullable = true)
+    protected Pago pago;
 
     public Tramite() {
     }
@@ -74,6 +87,22 @@ public abstract class Tramite implements Serializable {
         this.monto = monto;
     }
 
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
+
+    public Pago getPago() {
+        return pago;
+    }
+
+    public void setPago(Pago pago) {
+        this.pago = pago;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -93,6 +122,6 @@ public abstract class Tramite implements Serializable {
 
     @Override
     public String toString() {
-        return "Tramite{" + "id=" + id + ", fechaEmision=" + fechaEmision + ", monto=" + monto + '}';
+        return "Tramite{" + "id=" + id + ", fechaEmision=" + fechaEmision + ", monto=" + monto + ", persona=" + persona + ", pago=" + pago + '}';
     }
 }

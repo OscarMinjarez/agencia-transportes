@@ -5,12 +5,15 @@
 package org.itson.dominio;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,10 +34,10 @@ public class Persona implements Serializable {
     @Column(name = "nombres", nullable = false, length = 50)
     private String nombres;
     
-    @Column(name = "apellidoPaterno", nullable = false, length = 50)
+    @Column(name = "apellido_paterno", nullable = false, length = 50)
     private String apellidoPaterno;
     
-    @Column(name = "apellidoMaterno", nullable = true, length = 50)
+    @Column(name = "apellido_materno", nullable = true, length = 50)
     private String apellidoMaterno;
     
     @Column(name = "telefono", nullable = false, length = 10)
@@ -47,27 +50,26 @@ public class Persona implements Serializable {
     @Column(name = "rfc", nullable = false, length = 13)
     private String rfc;
     
-    @Column(name = "curp", nullable = false, length = 18)
-    private String curp;
-    
-    @Column(name = "esDiscapacitado", nullable = false)
+    @Column(name = "es_discapacitado", nullable = false)
     private Boolean esDiscapacitado;
+    
+    @OneToMany(mappedBy = "persona")
+    private List<Tramite> tramites;
 
     public Persona() {
     }
 
-    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, String curp, Boolean esDiscapacitado) {
+    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado) {
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
         this.rfc = rfc;
-        this.curp = curp;
         this.esDiscapacitado = esDiscapacitado;
     }
 
-    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, String curp, Boolean esDiscapacitado) {
+    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado) {
         this.id = id;
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
@@ -75,8 +77,30 @@ public class Persona implements Serializable {
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
         this.rfc = rfc;
-        this.curp = curp;
         this.esDiscapacitado = esDiscapacitado;
+    }
+
+    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado, List<Tramite> tramites) {
+        this.nombres = nombres;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
+        this.rfc = rfc;
+        this.esDiscapacitado = esDiscapacitado;
+        this.tramites = tramites;
+    }
+
+    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado, List<Tramite> tramites) {
+        this.id = id;
+        this.nombres = nombres;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
+        this.rfc = rfc;
+        this.esDiscapacitado = esDiscapacitado;
+        this.tramites = tramites;
     }
 
     public Long getId() {
@@ -135,14 +159,6 @@ public class Persona implements Serializable {
         this.rfc = rfc;
     }
 
-    public String getCurp() {
-        return curp;
-    }
-
-    public void setCurp(String curp) {
-        this.curp = curp;
-    }
-
     public Boolean getEsDiscapacitado() {
         return esDiscapacitado;
     }
@@ -151,6 +167,22 @@ public class Persona implements Serializable {
         this.esDiscapacitado = esDiscapacitado;
     }
 
+    public List<Tramite> getTramites() {
+        return tramites;
+    }
+
+    public void setTramites(List<Tramite> tramites) {
+        this.tramites = tramites;
+    }
+
+    public void addTramite(Tramite tramite) {
+        if (this.tramites == null) {
+            this.tramites = new ArrayList<>();
+        }
+        
+        this.tramites.add(tramite);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -170,6 +202,6 @@ public class Persona implements Serializable {
 
     @Override
     public String toString() {
-        return "Persona{" + "id=" + id + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + ", rfc=" + rfc + ", curp=" + curp + ", esDiscapacitado=" + esDiscapacitado + '}';
+        return "Persona{" + "id=" + id + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + ", rfc=" + rfc + ", esDiscapacitado=" + esDiscapacitado + '}';
     }
 }
