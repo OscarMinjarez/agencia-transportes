@@ -48,16 +48,6 @@ public class Placa extends Tramite implements Serializable {
         this.esActiva = esActiva;
     }
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTextoPlaca() {
         return textoPlaca;
     }

@@ -37,17 +37,7 @@ public class Licencia extends Tramite implements Serializable {
         super(id, fechaEmision, monto);
         this.fechaExpedicion = fechaExpedicion;
     }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    
     public Calendar getFechaExpedicion() {
         return fechaExpedicion;
     }
