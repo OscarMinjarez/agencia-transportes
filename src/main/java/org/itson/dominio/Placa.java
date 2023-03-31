@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,6 +31,10 @@ public class Placa extends Tramite implements Serializable {
     
     @Column(name = "es_activa", nullable = false)
     private Boolean esActiva;
+    
+    @ManyToOne()
+    @JoinColumn(name = "id_vehiculo", nullable = true)
+    private Vehiculo vehiculo;
 
     public Placa() {
         super();
@@ -72,6 +78,14 @@ public class Placa extends Tramite implements Serializable {
         this.esActiva = esActiva;
     }
 
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -91,6 +105,6 @@ public class Placa extends Tramite implements Serializable {
 
     @Override
     public String toString() {
-        return "Placa{" + "textoPlaca=" + textoPlaca + ", fechaRecepcion=" + fechaRecepcion + ", esActiva=" + esActiva + '}';
+        return "Placa{" + "textoPlaca=" + textoPlaca + ", fechaRecepcion=" + fechaRecepcion + ", esActiva=" + esActiva + ", vehiculo=" + vehiculo + '}';
     }
 }

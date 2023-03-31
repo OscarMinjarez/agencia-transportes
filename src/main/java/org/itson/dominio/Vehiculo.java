@@ -5,19 +5,24 @@
 package org.itson.dominio;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author Oscar
  */
-@MappedSuperclass
+@Entity
+@Table(name = "vehiculos")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Vehiculo implements Serializable {
 
@@ -40,6 +45,9 @@ public abstract class Vehiculo implements Serializable {
     
     @Column(name = "color", nullable = false, length = 30)
     protected String color;
+    
+    @OneToMany(mappedBy = "vehiculo")
+    protected List<Placa> placas;
 
     public Vehiculo() {
     }
@@ -107,6 +115,22 @@ public abstract class Vehiculo implements Serializable {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public List<Placa> getPlacas() {
+        return placas;
+    }
+
+    public void setPlacas(List<Placa> placas) {
+        this.placas = placas;
+    }
+    
+    public void addPlaca(Placa placa) {
+        if (this.placas == null) {
+            this.placas = new ArrayList<>();
+        }
+        
+        this.placas.add(placa);
     }
 
     @Override
