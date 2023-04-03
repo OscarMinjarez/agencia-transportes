@@ -6,18 +6,18 @@ package org.itson.implementaciones;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import org.itson.interfaces.IConexionDB;
+import org.itson.interfaces.IConexionBD;
 
 /**
  *
  * @author Oscar
  */
-public class ConexionDB implements IConexionDB {
+public class ConexionBD implements IConexionBD {
     
     private final String CADENA_CONEXION;
     
-    public ConexionDB(String cadena_conexion) {
-        this.CADENA_CONEXION = cadena_conexion;
+    public ConexionBD(String CADENA_CONEXION) {
+        this.CADENA_CONEXION = CADENA_CONEXION;
     }
 
     @Override

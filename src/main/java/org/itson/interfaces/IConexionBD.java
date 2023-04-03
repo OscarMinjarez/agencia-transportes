@@ -10,6 +10,6 @@ import javax.persistence.EntityManager;
  *
  * @author Oscar
  */
-public interface IConexionDB {
+public interface IConexionBD {
     EntityManager crearConexion();
 }
