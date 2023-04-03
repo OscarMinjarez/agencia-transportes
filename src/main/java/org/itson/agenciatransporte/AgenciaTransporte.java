@@ -10,6 +10,7 @@ import org.itson.implementaciones.ConexionBD;
 import org.itson.implementaciones.PersonasDAO;
 import org.itson.interfaces.IConexionBD;
 import org.itson.interfaces.IPersonasDAO;
+import org.itson.utils.ManejadorPlacas;
 
 /**
  *
@@ -50,14 +51,18 @@ public class AgenciaTransporte {
 //        vehiculo1.addPlaca(placa1);
 //        placa1.setVehiculo(vehiculo1);
         
-        emManager.getTransaction().commit();
-        
-        IPersonasDAO personaDAO = new PersonasDAO(conexion);
-        
-        PersonasDTO persona = new PersonasDTO();
-        // persona.setNombres("Oscar");
-        persona.setAnhoNacimiento(2001);
-        
-        System.out.println(personaDAO.buscar(persona));
+//        emManager.getTransaction().commit();
+//        
+//        IPersonasDAO personaDAO = new PersonasDAO(conexion);
+//        
+//        PersonasDTO persona = new PersonasDTO();
+//        // persona.setNombres("Oscar");
+//        persona.setAnhoNacimiento(2001);
+//        
+//        System.out.println(personaDAO.buscar(persona));
+
+        System.out.println(ManejadorPlacas.validarPlaca("ASD-123"));
+        System.out.println(ManejadorPlacas.validarPlaca("oas-142"));
+        System.out.println(ManejadorPlacas.validarPlaca("oas-"));
     }
 }
