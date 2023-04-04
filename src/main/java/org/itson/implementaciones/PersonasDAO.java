@@ -51,11 +51,11 @@ public class PersonasDAO implements IPersonasDAO {
         }
         
         if (parametrosPersona.getApellidoPaterno() != null) {
-            filtros.add(builder.like(persona.get("apellido_paterno"), parametrosPersona.getApellidoPaterno()));
+            filtros.add(builder.like(persona.get("apellidoPaterno"), parametrosPersona.getApellidoPaterno()));
         }
         
         if (parametrosPersona.getApellidoMaterno() != null) {
-            filtros.add(builder.like(persona.get("apellido_materno"), parametrosPersona.getApellidoMaterno()));
+            filtros.add(builder.like(persona.get("apellidoMaterno"), parametrosPersona.getApellidoMaterno()));
         }
         
         if (parametrosPersona.getAnhoNacimiento() != null) {

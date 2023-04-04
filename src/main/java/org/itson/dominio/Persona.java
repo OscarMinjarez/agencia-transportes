@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.itson.utils.ManejadorRFC;
 
 /**
  *
@@ -59,48 +60,48 @@ public class Persona implements Serializable {
     public Persona() {
     }
 
-    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado) {
+    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado) {
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
-        this.rfc = rfc;
         this.esDiscapacitado = esDiscapacitado;
+        this.setRfc();
     }
 
-    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado) {
+    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado) {
         this.id = id;
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
-        this.rfc = rfc;
         this.esDiscapacitado = esDiscapacitado;
+        this.setRfc();
     }
 
-    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado, List<Tramite> tramites) {
+    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado, List<Tramite> tramites) {
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
-        this.rfc = rfc;
         this.esDiscapacitado = esDiscapacitado;
         this.tramites = tramites;
+        this.setRfc();
     }
 
-    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, String rfc, Boolean esDiscapacitado, List<Tramite> tramites) {
+    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado, List<Tramite> tramites) {
         this.id = id;
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
-        this.rfc = rfc;
         this.esDiscapacitado = esDiscapacitado;
         this.tramites = tramites;
+        this.setRfc();
     }
 
     public Long getId() {
@@ -155,8 +156,8 @@ public class Persona implements Serializable {
         return rfc;
     }
 
-    public void setRfc(String rfc) {
-        this.rfc = rfc;
+    public final void setRfc() {
+        this.rfc = ManejadorRFC.generarRFC(this);
     }
 
     public Boolean getEsDiscapacitado() {
