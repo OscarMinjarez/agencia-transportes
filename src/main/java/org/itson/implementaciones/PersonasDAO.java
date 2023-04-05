@@ -34,12 +34,12 @@ public class PersonasDAO implements IPersonasDAO {
     
     @Override
     public Persona buscar(Long id) {
-        return ENTITY_MANAGER.find(Persona.class, id);
+        return this.ENTITY_MANAGER.find(Persona.class, id);
     }
     
     @Override
     public List<Persona> buscar(PersonasDTO parametrosPersona) {
-        ENTITY_MANAGER.getTransaction().begin();
+        this.ENTITY_MANAGER.getTransaction().begin();
         
         CriteriaBuilder builder = ENTITY_MANAGER.getCriteriaBuilder();
         CriteriaQuery<Persona> criteria = builder.createQuery(Persona.class);
@@ -70,7 +70,7 @@ public class PersonasDAO implements IPersonasDAO {
         criteria.select(persona).where(builder.or(filtros.toArray(Predicate[]::new)));
         TypedQuery<Persona> query = ENTITY_MANAGER.createQuery(criteria);
         
-        ENTITY_MANAGER.getTransaction().commit();
+        this.ENTITY_MANAGER.getTransaction().commit();
         
         return query.getResultList();
     }
@@ -82,9 +82,9 @@ public class PersonasDAO implements IPersonasDAO {
         }
         
         // TODO: Agregar validaciones y formateo de persona.
-        ENTITY_MANAGER.getTransaction().begin();
-        ENTITY_MANAGER.persist(persona);
-        ENTITY_MANAGER.getTransaction().commit();
+        this.ENTITY_MANAGER.getTransaction().begin();
+        this.ENTITY_MANAGER.persist(persona);
+        this.ENTITY_MANAGER.getTransaction().commit();
         
         return persona;
     }
