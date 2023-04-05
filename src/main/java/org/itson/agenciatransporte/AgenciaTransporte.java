@@ -4,13 +4,14 @@
 
 package org.itson.agenciatransporte;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.persistence.EntityManager;
-import org.itson.dto.PersonasDTO;
+import org.itson.dto.PlacasDTO;
 import org.itson.implementaciones.ConexionBD;
-import org.itson.implementaciones.PersonasDAO;
+import org.itson.implementaciones.PlacasDAO;
 import org.itson.interfaces.IConexionBD;
-import org.itson.interfaces.IPersonasDAO;
-import org.itson.utils.ManejadorRFC;
+import org.itson.interfaces.IPlacasDAO;
 
 /**
  *
@@ -52,16 +53,20 @@ public class AgenciaTransporte {
 //        vehiculo1.addPlaca(placa1);
 //        placa1.setVehiculo(vehiculo1);
 
+       IPlacasDAO placa = new PlacasDAO(conexion);
+//       placa.insertar(new Placa(null, true, new GregorianCalendar(2023, Calendar.MARCH, 5), 2000f));
+
         emManager.getTransaction().commit();
 //        
-        IPersonasDAO personaDAO = new PersonasDAO(conexion);
+//        IPersonasDAO personaDAO = new PersonasDAO(conexion);
 //        
-        PersonasDTO persona = new PersonasDTO();
-        persona.setNombres("Josue");
-        persona.setApellidoPaterno("Cruz");
+//        PersonasDTO persona = new PersonasDTO();
+//        persona.setNombres("Josue");
+//        persona.setApellidoPaterno("Cruz");
 //        persona.setAnhoNacimiento(2001);
         
-        System.out.println(personaDAO.buscar(persona));
-        System.out.println(ManejadorRFC.validarRFC(personaDAO.buscar(3l).getRfc()));
+//        System.out.println(personaDAO.buscar(persona));
+//        System.out.println(ManejadorRFC.validarRFC(personaDAO.buscar(3l).getRfc()));
+//        System.out.println(placa.buscar(new PlacasDTO(null, null, new GregorianCalendar(2023, Calendar.MARCH, 5))));
     }
 }

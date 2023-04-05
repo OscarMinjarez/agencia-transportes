@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.itson.utils.ManejadorPlacas;
 
 /**
  *
@@ -40,26 +41,40 @@ public class Placa extends Tramite implements Serializable {
         super();
     }
 
-    public Placa(String textoPlaca, Calendar fechaRecepcion, Boolean esActiva, Calendar fechaEmision, Float monto) {
+    public Placa(Calendar fechaRecepcion, Boolean esActiva, Calendar fechaEmision, Float monto) {
         super(fechaEmision, monto);
-        this.textoPlaca = textoPlaca;
         this.fechaRecepcion = fechaRecepcion;
         this.esActiva = esActiva;
+        this.setTextoPlaca();
     }
 
-    public Placa(String textoPlaca, Calendar fechaRecepcion, Boolean esActiva, Long id, Calendar fechaEmision, Float monto) {
+    public Placa(Calendar fechaRecepcion, Boolean esActiva, Long id, Calendar fechaEmision, Float monto) {
         super(id, fechaEmision, monto);
-        this.textoPlaca = textoPlaca;
         this.fechaRecepcion = fechaRecepcion;
         this.esActiva = esActiva;
+        this.setTextoPlaca();
+    }
+
+    public Placa(Calendar fechaRecepcion, Boolean esActiva, Vehiculo vehiculo, Calendar fechaEmision, Float monto) {
+        super(fechaEmision, monto);
+        this.fechaRecepcion = fechaRecepcion;
+        this.esActiva = esActiva;
+        this.vehiculo = vehiculo;
+    }
+
+    public Placa(Calendar fechaRecepcion, Boolean esActiva, Vehiculo vehiculo, Long id, Calendar fechaEmision, Float monto) {
+        super(id, fechaEmision, monto);
+        this.fechaRecepcion = fechaRecepcion;
+        this.esActiva = esActiva;
+        this.vehiculo = vehiculo;
     }
 
     public String getTextoPlaca() {
         return textoPlaca;
     }
 
-    public void setTextoPlaca(String textoPlaca) {
-        this.textoPlaca = textoPlaca;
+    public final void setTextoPlaca() {
+        this.textoPlaca = ManejadorPlacas.generarPlaca();
     }
 
     public Calendar getFechaRecepcion() {
