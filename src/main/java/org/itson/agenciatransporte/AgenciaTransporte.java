@@ -4,14 +4,11 @@
 
 package org.itson.agenciatransporte;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import javax.persistence.EntityManager;
-import org.itson.dto.PlacasDTO;
 import org.itson.implementaciones.ConexionBD;
-import org.itson.implementaciones.PlacasDAO;
+import org.itson.implementaciones.LicenciasDAO;
 import org.itson.interfaces.IConexionBD;
-import org.itson.interfaces.IPlacasDAO;
+import org.itson.interfaces.ILicenciasDAO;
 
 /**
  *
@@ -53,8 +50,11 @@ public class AgenciaTransporte {
 //        vehiculo1.addPlaca(placa1);
 //        placa1.setVehiculo(vehiculo1);
 
-       IPlacasDAO placa = new PlacasDAO(conexion);
+//       IPlacasDAO placa = new PlacasDAO(conexion);
 //       placa.insertar(new Placa(null, true, new GregorianCalendar(2023, Calendar.MARCH, 5), 2000f));
+
+        ILicenciasDAO licencias = new LicenciasDAO(conexion);
+//        licencias.insertar(new Licencia(new GregorianCalendar(2026, Calendar.APRIL, 5), new GregorianCalendar(2023, Calendar.APRIL, 5), 1500f));
 
         emManager.getTransaction().commit();
 //        
@@ -68,5 +68,6 @@ public class AgenciaTransporte {
 //        System.out.println(personaDAO.buscar(persona));
 //        System.out.println(ManejadorRFC.validarRFC(personaDAO.buscar(3l).getRfc()));
 //        System.out.println(placa.buscar(new PlacasDTO(null, null, new GregorianCalendar(2023, Calendar.MARCH, 5))));
+        System.out.println(licencias.buscar(3l));
     }
 }
