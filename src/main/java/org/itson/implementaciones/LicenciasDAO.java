@@ -44,6 +44,14 @@ public class LicenciasDAO implements ILicenciasDAO {
         Root<Licencia> licencia = criteria.from(Licencia.class);
         List<Predicate> filtros = new ArrayList<>();
         
+        if (parametrosLicencia.getFechaEmision() != null) {
+            filtros.add(builder.equal(licencia.get("fechaEmision"), parametrosLicencia.getFechaEmision()));
+        }
+        
+        if (parametrosLicencia.getMonto() != null) {
+            filtros.add(builder.equal(licencia.get("monto"), parametrosLicencia.getMonto()));
+        }
+        
         if (parametrosLicencia.getFechaExpedicion() != null) {
             filtros.add(builder.equal(licencia.get("fechaExpedicion"), parametrosLicencia.getFechaExpedicion()));
         }
