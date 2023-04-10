@@ -11,6 +11,8 @@ import java.util.Calendar;
  * @author Oscar
  */
 public class PlacasDTO {
+    private Calendar fechaEmision;
+    private Float monto;
     private String textoPlaca;
     private Boolean esActiva;
     private Calendar fechaRecepcion;
@@ -18,10 +20,28 @@ public class PlacasDTO {
     public PlacasDTO() {
     }
 
-    public PlacasDTO(String textoPlaca, Boolean esActiva, Calendar fechaRecepcion) {
+    public PlacasDTO(Calendar fechaEmision, Float monto, String textoPlaca, Boolean esActiva, Calendar fechaRecepcion) {
+        this.fechaEmision = fechaEmision;
+        this.monto = monto;
         this.textoPlaca = textoPlaca;
         this.esActiva = esActiva;
         this.fechaRecepcion = fechaRecepcion;
+    }
+
+    public Calendar getFechaEmision() {
+        return fechaEmision;
+    }
+
+    public void setFechaEmision(Calendar fechaEmision) {
+        this.fechaEmision = fechaEmision;
+    }
+
+    public Float getMonto() {
+        return monto;
+    }
+
+    public void setMonto(Float monto) {
+        this.monto = monto;
     }
 
     public String getTextoPlaca() {
@@ -50,6 +70,6 @@ public class PlacasDTO {
 
     @Override
     public String toString() {
-        return "PlacasDTO{" + "textoPlaca=" + textoPlaca + ", esActiva=" + esActiva + ", fechaRecepcion=" + fechaRecepcion + '}';
+        return "PlacasDTO{" + "fechaEmision=" + fechaEmision + ", monto=" + monto + ", textoPlaca=" + textoPlaca + ", esActiva=" + esActiva + ", fechaRecepcion=" + fechaRecepcion + '}';
     }
 }

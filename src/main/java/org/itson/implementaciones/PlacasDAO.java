@@ -45,6 +45,14 @@ public class PlacasDAO implements IPlacasDAO {
         Root<Placa> placa = criteria.from(Placa.class);
         List<Predicate> filtros = new ArrayList<>();
         
+        if (parametrosPlaca.getFechaEmision() != null) {
+            filtros.add(builder.equal(placa.get("fechaEmision"), parametrosPlaca.getFechaEmision()));
+        }
+        
+        if (parametrosPlaca.getMonto() != null) {
+            filtros.add(builder.equal(placa.get("monto"), parametrosPlaca.getMonto()));
+        }
+        
         if (parametrosPlaca.getTextoPlaca() != null) {
             filtros.add(builder.like(placa.get("textoPlaca"), parametrosPlaca.getTextoPlaca()));
         }
