@@ -56,6 +56,12 @@ public class Persona implements Serializable {
     
     @OneToMany(mappedBy = "persona")
     private List<Tramite> tramites;
+    
+    @OneToMany(mappedBy = "placaPersona")
+    private List<Placa> placas;
+    
+    @OneToMany(mappedBy = "licenciaPersona")
+    private List<Licencia> licencias;
 
     public Persona() {
     }
@@ -81,7 +87,7 @@ public class Persona implements Serializable {
         this.setRfc();
     }
 
-    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado, List<Tramite> tramites) {
+    public Persona(String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado, List<Tramite> tramites, List<Placa> placas, List<Licencia> licencias) {
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -89,10 +95,12 @@ public class Persona implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
         this.esDiscapacitado = esDiscapacitado;
         this.tramites = tramites;
+        this.placas = placas;
+        this.licencias = licencias;
         this.setRfc();
     }
 
-    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado, List<Tramite> tramites) {
+    public Persona(Long id, String nombres, String apellidoPaterno, String apellidoMaterno, String telefono, Calendar fechaNacimiento, Boolean esDiscapacitado, List<Tramite> tramites, List<Placa> placas, List<Licencia> licencias) {
         this.id = id;
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
@@ -101,9 +109,11 @@ public class Persona implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
         this.esDiscapacitado = esDiscapacitado;
         this.tramites = tramites;
+        this.placas = placas;
+        this.licencias = licencias;
         this.setRfc();
     }
-
+    
     public Long getId() {
         return id;
     }
@@ -183,6 +193,38 @@ public class Persona implements Serializable {
         
         this.tramites.add(tramite);
     }
+
+    public List<Placa> getPlacas() {
+        return placas;
+    }
+
+    public void setPlacas(List<Placa> placas) {
+        this.placas = placas;
+    }
+    
+    public void addPlaca(Placa placa) {
+        if (this.placas == null) {
+            this.placas = new ArrayList<>();
+        }
+        
+        this.tramites.add(placa);
+    }
+
+    public List<Licencia> getLicencias() {
+        return licencias;
+    }
+
+    public void setLicencias(List<Licencia> licencias) {
+        this.licencias = licencias;
+    }
+    
+    public void addLicencia(Licencia licencia) {
+        if (this.licencias == null) {
+            this.licencias = new ArrayList<>();
+        }
+        
+        this.tramites.add(licencia);
+    }
     
     @Override
     public int hashCode() {
@@ -203,6 +245,6 @@ public class Persona implements Serializable {
 
     @Override
     public String toString() {
-        return "Persona{" + "id=" + id + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + ", rfc=" + rfc + ", esDiscapacitado=" + esDiscapacitado + '}';
+        return "Persona{" + "id=" + id + ", nombres=" + nombres + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + ", rfc=" + rfc + ", esDiscapacitado=" + esDiscapacitado + ", tramites=" + tramites + ", placas=" + placas + '}';
     }
 }

@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +25,10 @@ public class Licencia extends Tramite implements Serializable {
     @Column(name = "fecha_expedicion", nullable = false)
     @Temporal(TemporalType.DATE)
     private Calendar fechaExpedicion;
+    
+    @OneToOne()
+    @JoinColumn(name = "id_persona", nullable = true)
+    private Persona licenciaPersona;
 
     public Licencia() {
         super();
@@ -46,6 +52,14 @@ public class Licencia extends Tramite implements Serializable {
         this.fechaExpedicion = fechaExpedicion;
     }
 
+    public Persona getLicenciaPersona() {
+        return licenciaPersona;
+    }
+
+    public void setLicenciaPersona(Persona licenciaPersona) {
+        this.licenciaPersona = licenciaPersona;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -65,6 +79,6 @@ public class Licencia extends Tramite implements Serializable {
 
     @Override
     public String toString() {
-        return "org.itson.dominio.Licencia[ id=" + id + " ] " + super.toString();
+        return "Licencia{" + "fechaExpedicion=" + fechaExpedicion + ", licenciaPersona=" + licenciaPersona + '}';
     }
 }
