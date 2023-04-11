@@ -27,8 +27,8 @@ public class PersonasDAO implements IPersonasDAO {
     private final IConexionBD MANEJADOR_CONEXIONES;
     private final EntityManager ENTITY_MANAGER;
     
-    public PersonasDAO(IConexionBD manejadorConexiones) {
-        this.MANEJADOR_CONEXIONES = manejadorConexiones;
+    public PersonasDAO(IConexionBD MANEJADOR_CONEXIONES) {
+        this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
         this.ENTITY_MANAGER = this.MANEJADOR_CONEXIONES.crearConexion();
     }
     
