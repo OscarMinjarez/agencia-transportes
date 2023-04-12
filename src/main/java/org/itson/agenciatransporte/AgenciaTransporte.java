@@ -4,7 +4,6 @@
 
 package org.itson.agenciatransporte;
 
-import javax.persistence.EntityManager;
 import org.itson.implementaciones.ConexionBD;
 import org.itson.interfaces.IConexionBD;
 import org.itson.presentacion.PantallaPrincipal;

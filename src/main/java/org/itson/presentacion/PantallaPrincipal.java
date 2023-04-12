@@ -5,6 +5,9 @@
 package org.itson.presentacion;
 
 import javax.persistence.EntityManager;
+import javax.swing.JOptionPane;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import org.itson.interfaces.IConexionBD;
 
 /**
@@ -25,6 +28,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         this.ENTITY_MANAGER = this.MANEJADOR_CONEXIONES.crearConexion();
         initComponents();
     }
+    
+    public void mostrarPantallaTramitarLicencia() {
+        new TramitarLicencia(this.MANEJADOR_CONEXIONES).setVisible(true);
+        this.dispose();
+    }
+    
+    public void mostrarPantallaTramitarPlacaAutoNuevo() {
+        new TramitarPlacaAutoNuevo(this.MANEJADOR_CONEXIONES).setVisible(true);
+        this.dispose();
+    }
+    
+    public void mostrarPantallaTramitarPlacaAutoUsado() {
+        new TramitarPlacaAutoUsado(this.MANEJADOR_CONEXIONES).setVisible(true);
+        this.dispose();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,12 +54,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         lblTitulo = new javax.swing.JLabel();
-        btnTramitarPlacas = new javax.swing.JButton();
+        btnTramitarPlacaAutoUsado = new javax.swing.JButton();
         btnTramitarLicencias = new javax.swing.JButton();
         btnReportes = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        btnTramitarPlacas1 = new javax.swing.JButton();
+        btnTramitarPlacaAutoNuevo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Agencia De Transportes");
@@ -50,10 +68,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         lblTitulo.setFont(new java.awt.Font("JetBrains Mono", 1, 18)); // NOI18N
         lblTitulo.setText("Agencia De Transportes");
 
-        btnTramitarPlacas.setText("Tramitar Placa Auto Usado");
-        btnTramitarPlacas.addActionListener(new java.awt.event.ActionListener() {
+        btnTramitarPlacaAutoUsado.setText("Tramitar Placa Auto Usado");
+        btnTramitarPlacaAutoUsado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTramitarPlacasActionPerformed(evt);
+                btnTramitarPlacaAutoUsadoActionPerformed(evt);
             }
         });
 
@@ -72,13 +90,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
 
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Agregar personas");
 
-        btnTramitarPlacas1.setText("Tramitar Placa Auto Nuevo");
-        btnTramitarPlacas1.addActionListener(new java.awt.event.ActionListener() {
+        btnTramitarPlacaAutoNuevo.setText("Tramitar Placa Auto Nuevo");
+        btnTramitarPlacaAutoNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTramitarPlacas1ActionPerformed(evt);
+                btnTramitarPlacaAutoNuevoActionPerformed(evt);
             }
         });
 
@@ -97,9 +120,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
                         .addComponent(btnSalir))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnTramitarPlacas1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnTramitarPlacaAutoNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnTramitarPlacas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(btnTramitarPlacaAutoUsado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -111,8 +134,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnTramitarLicencias, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTramitarPlacas1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTramitarPlacas, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnTramitarPlacaAutoNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTramitarPlacaAutoUsado, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
@@ -126,28 +149,38 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnTramitarPlacasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTramitarPlacasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTramitarPlacasActionPerformed
+    private void btnTramitarPlacaAutoUsadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTramitarPlacaAutoUsadoActionPerformed
+        this.mostrarPantallaTramitarPlacaAutoUsado();
+    }//GEN-LAST:event_btnTramitarPlacaAutoUsadoActionPerformed
 
     private void btnTramitarLicenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTramitarLicenciasActionPerformed
-        // TODO add your handling code here:
+        this.mostrarPantallaTramitarLicencia();
     }//GEN-LAST:event_btnTramitarLicenciasActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnReportesActionPerformed
 
-    private void btnTramitarPlacas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTramitarPlacas1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTramitarPlacas1ActionPerformed
+    private void btnTramitarPlacaAutoNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTramitarPlacaAutoNuevoActionPerformed
+        this.mostrarPantallaTramitarPlacaAutoNuevo();
+    }//GEN-LAST:event_btnTramitarPlacaAutoNuevoActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Salir", JOptionPane.YES_NO_OPTION);
+        
+        if (opcion == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        } else {
+            this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        }
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReportes;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnTramitarLicencias;
-    private javax.swing.JButton btnTramitarPlacas;
-    private javax.swing.JButton btnTramitarPlacas1;
+    private javax.swing.JButton btnTramitarPlacaAutoNuevo;
+    private javax.swing.JButton btnTramitarPlacaAutoUsado;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables

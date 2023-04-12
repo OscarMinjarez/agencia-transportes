@@ -37,9 +37,9 @@
                       <Component id="btnSalir" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="2" attributes="0">
-                      <Component id="btnTramitarPlacas1" min="-2" pref="223" max="-2" attributes="0"/>
+                      <Component id="btnTramitarPlacaAutoNuevo" min="-2" pref="223" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnTramitarPlacas" max="32767" attributes="0"/>
+                      <Component id="btnTramitarPlacaAutoUsado" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -55,8 +55,8 @@
               <Component id="btnTramitarLicencias" min="-2" pref="60" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnTramitarPlacas1" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
-                  <Component id="btnTramitarPlacas" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="btnTramitarPlacaAutoNuevo" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="btnTramitarPlacaAutoUsado" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnReportes" min="-2" pref="60" max="-2" attributes="0"/>
@@ -79,12 +79,12 @@
         <Property name="text" type="java.lang.String" value="Agencia De Transportes"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnTramitarPlacas">
+    <Component class="javax.swing.JButton" name="btnTramitarPlacaAutoUsado">
       <Properties>
         <Property name="text" type="java.lang.String" value="Tramitar Placa Auto Usado"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTramitarPlacasActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTramitarPlacaAutoUsadoActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnTramitarLicencias">
@@ -107,18 +107,21 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Salir"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalirActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton5">
       <Properties>
         <Property name="text" type="java.lang.String" value="Agregar personas"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnTramitarPlacas1">
+    <Component class="javax.swing.JButton" name="btnTramitarPlacaAutoNuevo">
       <Properties>
         <Property name="text" type="java.lang.String" value="Tramitar Placa Auto Nuevo"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTramitarPlacas1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTramitarPlacaAutoNuevoActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

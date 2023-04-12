@@ -4,17 +4,44 @@
  */
 package org.itson.presentacion;
 
+import javax.persistence.EntityManager;
+import javax.swing.JOptionPane;
+import org.itson.interfaces.IConexionBD;
+
 /**
  *
  * @author Oscar
  */
 public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
 
+    private final IConexionBD MANEJADOR_CONEXIONES;
+    private final EntityManager ENTITY_MANAGER;
+    
     /**
      * Creates new form AutoNuevo
+     * @param MANEJEADOR_CONEXIONES
      */
-    public TramitarPlacaAutoNuevo() {
+    public TramitarPlacaAutoNuevo(IConexionBD MANEJADOR_CONEXIONES) {
+        this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
+        this.ENTITY_MANAGER = this.MANEJADOR_CONEXIONES.crearConexion();
         initComponents();
+    }
+    
+    public void mostrarPantallaBuscarPersona() {
+        new BuscarPersona(this.MANEJADOR_CONEXIONES, this).setVisible(true);
+        this.setEnabled(false);
+    }
+    
+    public void mostrarPantallaPrincipal() {
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Quieres regresar a la pantalla principal?", "Salir", JOptionPane.YES_NO_OPTION);
+        
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            new PantallaPrincipal(MANEJADOR_CONEXIONES).setVisible(true);
+            this.dispose();
+        } else {
+            this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        }
     }
 
     /**
@@ -53,14 +80,24 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
         btnRegistrar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar Auto Nuevo");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTramitarPlacaAutoNuevo.setFont(new java.awt.Font("JetBrains Mono", 1, 18)); // NOI18N
         lblTramitarPlacaAutoNuevo.setText("Tramitar Placa Auto Nuevo");
 
         btnBuscarPersona.setText("Buscar persona");
+        btnBuscarPersona.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarPersonaActionPerformed(evt);
+            }
+        });
 
         paneInfoPersona.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -204,6 +241,11 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
         btnRegistrar.setText("Registrar");
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -257,6 +299,18 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.mostrarPantallaPrincipal();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.mostrarPantallaPrincipal();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnBuscarPersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPersonaActionPerformed
+        this.mostrarPantallaBuscarPersona();
+    }//GEN-LAST:event_btnBuscarPersonaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarPersona;
