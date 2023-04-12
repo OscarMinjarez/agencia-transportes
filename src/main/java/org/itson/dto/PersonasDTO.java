@@ -4,8 +4,6 @@
  */
 package org.itson.dto;
 
-import java.util.Calendar;
-
 /**
  *
  * @author Oscar
