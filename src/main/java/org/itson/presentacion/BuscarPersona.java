@@ -4,17 +4,182 @@
  */
 package org.itson.presentacion;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
+import org.itson.interfaces.IConexionBD;
+import org.itson.utils.Validaciones;
+import org.itson.utils.ManejadorRFC;
+import org.itson.dto.PersonasDTO;
+import org.itson.implementaciones.PersonasDAO;
+import org.itson.interfaces.IPersonasDAO;
+import java.util.List;
+import org.itson.dominio.Persona;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JTable;
+import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
+
 /**
  *
  * @author Oscar
  */
 public class BuscarPersona extends javax.swing.JFrame {
 
+    private final IConexionBD MANEJADOR_CONEXIONES;
+    private final TramitarLicencia pantallaTramitarLicencia;
+    private final JFrame pantalla;
+    
+    private final IPersonasDAO personasDAO;
+    
     /**
      * Creates new form BuscarPersona
+     * @param MANEJADOR_CONEXIONES
+     * @param pantallaTramitarLicencia
      */
-    public BuscarPersona() {
+    public BuscarPersona(IConexionBD MANEJADOR_CONEXIONES, TramitarLicencia pantallaTramitarLicencia) {
+        this.pantalla = null;
+        this.pantallaTramitarLicencia = pantallaTramitarLicencia;
+        this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
+        
+        this.personasDAO = new PersonasDAO(this.MANEJADOR_CONEXIONES);
+        
         initComponents();
+    }
+    
+    public BuscarPersona(IConexionBD MANEJADOR_CONEXIONES, JFrame pantalla) {
+        this.pantallaTramitarLicencia = null;
+        this.pantalla = pantalla;
+        this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
+        
+        this.personasDAO = new PersonasDAO(this.MANEJADOR_CONEXIONES);
+        
+        initComponents();
+    }
+    
+    public void mostrarMensajeDeError(String mensaje, String titulo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public void mostrarPantallaTramitarLicencia() {
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Quieres volver a la pantalla anterior?", "Volver", JOptionPane.YES_NO_OPTION);
+        
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            
+            if (this.pantalla != null) {
+                this.pantalla.setEnabled(true);
+            }
+            
+            if (this.pantallaTramitarLicencia != null) {
+                this.pantallaTramitarLicencia.setEnabled(true);
+            }
+            this.dispose();
+        } else {
+            this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        }
+    }
+    
+    public PersonasDTO extraerDatosPersona() {        
+        if (!Validaciones.comprobarFormatoNombre(this.txtNombre.getText()) && !Validaciones.campoVacio(this.txtNombre.getText())) {
+            this.mostrarMensajeDeError("El formato del nombre no es válido", "Formato inválido");
+            return null;
+        }
+        
+        if (!Validaciones.comprobarFormatoApellido(this.txtApellidoPaterno.getText()) && !Validaciones.campoVacio(this.txtApellidoPaterno.getText())){
+            this.mostrarMensajeDeError("El formato del apellido paterno no es válido", "Formato inválido");
+            return null;
+        }
+        
+        if (!Validaciones.comprobarFormatoApellido(this.txtApellidoMaterno.getText()) && !Validaciones.campoVacio(this.txtApellidoMaterno.getText())) {
+            this.mostrarMensajeDeError("El formato del apellido materno no es válido", "Formato inválido");
+            return null;
+        }
+        
+        if (!Validaciones.comprobarFormatoAnho(this.txtAnhoNacimiento.getText()) && !Validaciones.campoVacio(this.txtAnhoNacimiento.getText())) {
+            this.mostrarMensajeDeError("El formato del año de nacimiento no es válido\nSólo se permiten 4 dígitos numéricos.", "Formato inválido");
+            return null;
+        }
+        
+        if (!ManejadorRFC.validarRFC(this.txtRfc.getText()) && !Validaciones.campoVacio(this.txtRfc.getText())) {
+            this.mostrarMensajeDeError("El formato del RFC no es válido\nSólo se permiten 13 caracteres con el siguiente formato:\n\tXXXX000000XX0", "Formato inválido");
+            return null;
+        }
+        
+        if (Validaciones.campoVacio(this.txtNombre.getText()) &&
+                Validaciones.campoVacio(this.txtApellidoPaterno.getText()) &&
+                Validaciones.campoVacio(this.txtApellidoMaterno.getText()) &&
+                Validaciones.campoVacio(this.txtAnhoNacimiento.getText()) &&
+                Validaciones.campoVacio(this.txtRfc.getText())) {
+            
+            this.mostrarMensajeDeError("Debe llenar al menos un campo", "Campos vacíos");
+
+            return null;
+        } else {
+            String nombre = !Validaciones.campoVacio(this.txtNombre.getText()) ? this.txtNombre.getText() : null;
+            String apellidoPaterno = !Validaciones.campoVacio(this.txtApellidoPaterno.getText()) ? this.txtApellidoPaterno.getText() : null;
+            String apellidoMaterno = !Validaciones.campoVacio(this.txtApellidoMaterno.getText()) ? this.txtApellidoMaterno.getText() : null;
+            Integer anhoNacimiento = !Validaciones.campoVacio(this.txtAnhoNacimiento.getText()) ? Integer.valueOf(this.txtAnhoNacimiento.getText()) : null;
+            String rfc = !Validaciones.campoVacio(this.txtRfc.getText()) ? this.txtRfc.getText() : null;
+            
+            return new PersonasDTO(nombre, apellidoPaterno, apellidoMaterno, anhoNacimiento, rfc);
+        }
+    }
+    
+    public List<Persona> listarPersonasPorParametros(PersonasDTO personaPorParametros) {
+        if (personaPorParametros == null) {
+            return null;
+        }
+        
+        return this.personasDAO.buscar(personaPorParametros);
+    }
+    
+    public void mostrarPersonasEnLaTabla(List<Persona> listaPersonas) {
+        if (listaPersonas == null) {
+            this.mostrarMensajeDeError("No hay ningún registro que concuerde con los parámetros.", "Sin registros");
+            this.limpiarTabla(this.tablePersonas);
+        } else {
+            DefaultTableModel modeloTabla = (DefaultTableModel) this.tablePersonas.getModel();
+            modeloTabla.setNumRows(0);
+
+            for (Persona persona : listaPersonas) {
+                Object[] fila = {
+                    persona.getNombres(),
+                    persona.getApellidoPaterno(),
+                    persona.getApellidoMaterno(),
+                    this.formatearFecha((GregorianCalendar) persona.getFechaNacimiento()),
+                    persona.getEsDiscapacitado() ? "Sí" : "No",
+                    persona.getRfc()
+                };
+
+                modeloTabla.addRow(fila);
+            }
+        }
+    }
+    
+    public void limpiarTabla(JTable tabla) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        while (modelo.getRowCount() > 0) {
+            modelo.removeRow(0);
+        }
+    }
+    
+    public void obtenerValorDeLaTabla() {
+        int filaSeleccionada = this.tablePersonas.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) this.tablePersonas.getModel();
+        
+        String rfcPersona = (String) model.getValueAt(filaSeleccionada, 5);
+        
+        List<Persona> lista = this.personasDAO.buscar(new PersonasDTO(null, null, null, null, rfcPersona));
+
+        System.out.println(lista.get(0));
+        this.pantallaTramitarLicencia.setPersona(lista.get(0));
+    }
+    
+    private String formatearFecha(GregorianCalendar fecha) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(fecha.getTime());
     }
 
     /**
@@ -36,16 +201,21 @@ public class BuscarPersona extends javax.swing.JFrame {
         txtApellidoMaterno = new javax.swing.JTextField();
         txtRfc = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        scrollPanePersonas = new javax.swing.JScrollPane();
+        tablePersonas = new javax.swing.JTable();
         lblAnhoNacimiento = new javax.swing.JLabel();
         txtAnhoNacimiento = new javax.swing.JTextField();
         btnSeleccionar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Buscar Persona");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblBuscarPersona.setFont(new java.awt.Font("JetBrains Mono", 1, 18)); // NOI18N
         lblBuscarPersona.setText("Buscar Persona");
@@ -59,13 +229,15 @@ public class BuscarPersona extends javax.swing.JFrame {
         lblRfc.setText("RFC:");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablePersonas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Nombre(s)", "Apellido paterno", "Apellido materno", "Fecha de nacimiento", "Discapacitado", "RFC"
@@ -79,13 +251,23 @@ public class BuscarPersona extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        scrollPanePersonas.setViewportView(tablePersonas);
 
         lblAnhoNacimiento.setText("Año de nacimiento:");
 
         btnSeleccionar.setText("Seleccionar");
+        btnSeleccionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeleccionarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +308,7 @@ public class BuscarPersona extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtAnhoNacimiento)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(scrollPanePersonas, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -158,7 +340,7 @@ public class BuscarPersona extends javax.swing.JFrame {
                             .addComponent(txtRfc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(scrollPanePersonas, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSeleccionar)
@@ -170,18 +352,34 @@ public class BuscarPersona extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.mostrarPantallaTramitarLicencia();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.mostrarPantallaTramitarLicencia();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        this.mostrarPersonasEnLaTabla(this.listarPersonasPorParametros(this.extraerDatosPersona()));
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
+        this.obtenerValorDeLaTabla();
+    }//GEN-LAST:event_btnSeleccionarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSeleccionar;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblAnhoNacimiento;
     private javax.swing.JLabel lblApellidoMaterno;
     private javax.swing.JLabel lblApellidoPaterno;
     private javax.swing.JLabel lblBuscarPersona;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblRfc;
+    private javax.swing.JScrollPane scrollPanePersonas;
+    private javax.swing.JTable tablePersonas;
     private javax.swing.JTextField txtAnhoNacimiento;
     private javax.swing.JTextField txtApellidoMaterno;
     private javax.swing.JTextField txtApellidoPaterno;
