@@ -137,6 +137,8 @@ public class BuscarPersona extends javax.swing.JFrame {
     
     public void mostrarPersonasEnLaTabla(List<Persona> listaPersonas) {
         if (listaPersonas == null) {
+            this.limpiarTabla(this.tablePersonas);
+        } else if (listaPersonas.isEmpty()) {
             this.mostrarMensajeDeError("No hay ningún registro que concuerde con los parámetros.", "Sin registros");
             this.limpiarTabla(this.tablePersonas);
         } else {
@@ -174,6 +176,7 @@ public class BuscarPersona extends javax.swing.JFrame {
         List<Persona> lista = this.personasDAO.buscar(new PersonasDTO(null, null, null, null, rfcPersona));
 
         System.out.println(lista.get(0));
+        
         this.pantallaTramitarLicencia.setPersona(lista.get(0));
     }
     
@@ -251,11 +254,17 @@ public class BuscarPersona extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tablePersonas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablePersonasMouseClicked(evt);
+            }
+        });
         scrollPanePersonas.setViewportView(tablePersonas);
 
         lblAnhoNacimiento.setText("Año de nacimiento:");
 
         btnSeleccionar.setText("Seleccionar");
+        btnSeleccionar.setEnabled(false);
         btnSeleccionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSeleccionarActionPerformed(evt);
@@ -362,11 +371,16 @@ public class BuscarPersona extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         this.mostrarPersonasEnLaTabla(this.listarPersonasPorParametros(this.extraerDatosPersona()));
+        this.btnSeleccionar.setEnabled(false);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
         this.obtenerValorDeLaTabla();
     }//GEN-LAST:event_btnSeleccionarActionPerformed
+
+    private void tablePersonasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePersonasMouseClicked
+        this.btnSeleccionar.setEnabled(true);
+    }//GEN-LAST:event_tablePersonasMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
