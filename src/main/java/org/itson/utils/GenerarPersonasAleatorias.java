@@ -7,7 +7,6 @@ package org.itson.utils;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
-import javax.persistence.EntityManager;
 import org.itson.dominio.Persona;
 import org.itson.implementaciones.PersonasDAO;
 import org.itson.interfaces.IConexionBD;
