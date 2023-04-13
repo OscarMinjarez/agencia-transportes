@@ -5,7 +5,11 @@
 package org.itson.interfaces;
 
 import java.util.List;
+import org.itson.dominio.Licencia;
+import org.itson.dominio.Placa;
 import org.itson.dominio.Tramite;
+import org.itson.dto.LicenciasDTO;
+import org.itson.dto.PlacasDTO;
 import org.itson.dto.TramitesDTO;
 
 /**
@@ -15,4 +19,7 @@ import org.itson.dto.TramitesDTO;
 public interface ITramitesDAO {
     Tramite buscar(Long id);
     List<Tramite> buscar(TramitesDTO parametrosTramite);
+    List<Placa> buscar(PlacasDTO parametrosPlaca);
+    List<Licencia> buscar(LicenciasDTO parametrosLicencia);
+    Tramite insertar(Tramite tramite);
 }
