@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import org.itson.interfaces.IConexionBD;
+import org.itson.utils.GenerarPersonasAleatorias;
 
 /**
  *
@@ -58,7 +59,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         btnTramitarLicencias = new javax.swing.JButton();
         btnReportes = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnAgregarPersonas = new javax.swing.JButton();
         btnTramitarPlacaAutoNuevo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -96,7 +97,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Agregar personas");
+        btnAgregarPersonas.setText("Agregar personas");
+        btnAgregarPersonas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarPersonasActionPerformed(evt);
+            }
+        });
 
         btnTramitarPlacaAutoNuevo.setText("Tramitar Placa Auto Nuevo");
         btnTramitarPlacaAutoNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -116,7 +122,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     .addComponent(btnTramitarLicencias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton5)
+                        .addComponent(btnAgregarPersonas)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
                         .addComponent(btnSalir))
                     .addGroup(layout.createSequentialGroup()
@@ -141,7 +147,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalir)
-                    .addComponent(jButton5))
+                    .addComponent(btnAgregarPersonas))
                 .addContainerGap())
         );
 
@@ -175,13 +181,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSalirActionPerformed
 
+    private void btnAgregarPersonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarPersonasActionPerformed
+        new GenerarPersonasAleatorias(this.MANEJADOR_CONEXIONES).generarPersonas();
+        JOptionPane.showMessageDialog(this, "Se han insertado 20 personas correctamernte", "¡Éxito!", JOptionPane.DEFAULT_OPTION);
+    }//GEN-LAST:event_btnAgregarPersonasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarPersonas;
     private javax.swing.JButton btnReportes;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnTramitarLicencias;
     private javax.swing.JButton btnTramitarPlacaAutoNuevo;
     private javax.swing.JButton btnTramitarPlacaAutoUsado;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }
