@@ -4,10 +4,12 @@
  */
 package org.itson.presentacion;
 
+import java.util.GregorianCalendar;
 import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
 import org.itson.dominio.Persona;
 import org.itson.interfaces.IConexionBD;
+import org.itson.utils.Validaciones;
 
 /**
  *
@@ -50,6 +52,16 @@ public class TramitarLicencia extends javax.swing.JFrame {
     public void setPersona(Persona persona) {
         this.persona = persona;
     }
+    
+    public void mostrarDatosPersona() {
+        if (this.persona != null) {
+            this.lblNombrePersona.setText(persona.getNombres() + " " + this.persona.getApellidoPaterno() + " " + this.persona.getApellidoMaterno());
+            this.lblEdadPersona.setText(Validaciones.calcularEdad((GregorianCalendar) this.persona.getFechaNacimiento()));
+            this.lblRfcPersona.setText(persona.getRfc());
+            this.lblEsDiscapacitadoPersona.setText(this.persona.getEsDiscapacitado() ? "Sí" : "No");
+            this.lblInstruccion.setText("");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,6 +80,8 @@ public class TramitarLicencia extends javax.swing.JFrame {
         lblEdad = new javax.swing.JLabel();
         lblRfc = new javax.swing.JLabel();
         lblNombrePersona = new javax.swing.JLabel();
+        lblEsDiscapacitado = new javax.swing.JLabel();
+        lblEsDiscapacitadoPersona = new javax.swing.JLabel();
         lblEdadPersona = new javax.swing.JLabel();
         lblRfcPersona = new javax.swing.JLabel();
         lblSeleccionarVigencia = new javax.swing.JLabel();
@@ -111,11 +125,8 @@ public class TramitarLicencia extends javax.swing.JFrame {
         lblRfc.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblRfc.setText("RFC:");
 
-        lblNombrePersona.setText("NA");
-
-        lblEdadPersona.setText("NA");
-
-        lblRfcPersona.setText("NA");
+        lblEsDiscapacitado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblEsDiscapacitado.setText("Es discapacitado:");
 
         javax.swing.GroupLayout paneInfoPersonaLayout = new javax.swing.GroupLayout(paneInfoPersona);
         paneInfoPersona.setLayout(paneInfoPersonaLayout);
@@ -126,16 +137,21 @@ public class TramitarLicencia extends javax.swing.JFrame {
                 .addGroup(paneInfoPersonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(paneInfoPersonaLayout.createSequentialGroup()
                         .addComponent(lblNombre)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblNombrePersona))
                     .addGroup(paneInfoPersonaLayout.createSequentialGroup()
-                        .addComponent(lblEdad)
+                        .addGroup(paneInfoPersonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(paneInfoPersonaLayout.createSequentialGroup()
+                                .addComponent(lblEdad)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblEdadPersona)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblRfc))
+                            .addComponent(lblEsDiscapacitado))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblEdadPersona)
-                        .addGap(61, 61, 61)
-                        .addComponent(lblRfc)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblRfcPersona)))
+                        .addGroup(paneInfoPersonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblRfcPersona)
+                            .addComponent(lblEsDiscapacitadoPersona))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         paneInfoPersonaLayout.setVerticalGroup(
@@ -145,12 +161,16 @@ public class TramitarLicencia extends javax.swing.JFrame {
                 .addGroup(paneInfoPersonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(lblNombrePersona))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(paneInfoPersonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(paneInfoPersonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblEdad)
                     .addComponent(lblRfc)
                     .addComponent(lblEdadPersona)
                     .addComponent(lblRfcPersona))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(paneInfoPersonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEsDiscapacitado)
+                    .addComponent(lblEsDiscapacitadoPersona))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -181,11 +201,10 @@ public class TramitarLicencia extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblSeleccionarVigencia)
                     .addComponent(lblTramitarLicencia)
-                    .addComponent(btnBuscarPersona)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblTotalAPagar)
                         .addGap(10, 10, 10)
@@ -201,8 +220,9 @@ public class TramitarLicencia extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnCancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRegistrarLicencia)))
-                .addGap(6, 6, 6))
+                        .addComponent(btnRegistrarLicencia))
+                    .addComponent(btnBuscarPersona))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,7 +235,7 @@ public class TramitarLicencia extends javax.swing.JFrame {
                 .addComponent(lblInstruccion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(paneInfoPersona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(lblSeleccionarVigencia)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -256,6 +276,8 @@ public class TramitarLicencia extends javax.swing.JFrame {
     private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblEdad;
     private javax.swing.JLabel lblEdadPersona;
+    private javax.swing.JLabel lblEsDiscapacitado;
+    private javax.swing.JLabel lblEsDiscapacitadoPersona;
     private javax.swing.JLabel lblInstruccion;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombrePersona;

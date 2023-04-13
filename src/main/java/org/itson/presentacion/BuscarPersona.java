@@ -19,7 +19,6 @@ import org.itson.dominio.Persona;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
 import java.util.GregorianCalendar;
-import java.text.SimpleDateFormat;
 
 /**
  *
@@ -75,6 +74,7 @@ public class BuscarPersona extends javax.swing.JFrame {
             if (this.pantallaTramitarLicencia != null) {
                 this.pantallaTramitarLicencia.setEnabled(true);
             }
+            
             this.dispose();
         } else {
             this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -150,7 +150,7 @@ public class BuscarPersona extends javax.swing.JFrame {
                     persona.getNombres(),
                     persona.getApellidoPaterno(),
                     persona.getApellidoMaterno(),
-                    this.formatearFecha((GregorianCalendar) persona.getFechaNacimiento()),
+                    Validaciones.formatearFecha((GregorianCalendar) persona.getFechaNacimiento()),
                     persona.getEsDiscapacitado() ? "Sí" : "No",
                     persona.getRfc()
                 };
@@ -178,11 +178,6 @@ public class BuscarPersona extends javax.swing.JFrame {
         System.out.println(lista.get(0));
         
         this.pantallaTramitarLicencia.setPersona(lista.get(0));
-    }
-    
-    private String formatearFecha(GregorianCalendar fecha) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return sdf.format(fecha.getTime());
     }
 
     /**
@@ -375,7 +370,25 @@ public class BuscarPersona extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
-        this.obtenerValorDeLaTabla();
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Seleccionar a este usuario?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            
+            if (this.pantalla != null) {
+                this.pantalla.setEnabled(true);
+            }
+            
+            if (this.pantallaTramitarLicencia != null) {
+                this.pantallaTramitarLicencia.setEnabled(true);
+            }
+            
+            this.obtenerValorDeLaTabla();
+            this.pantallaTramitarLicencia.mostrarDatosPersona();
+            this.dispose();
+        } else {
+            this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        }
     }//GEN-LAST:event_btnSeleccionarActionPerformed
 
     private void tablePersonasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePersonasMouseClicked
