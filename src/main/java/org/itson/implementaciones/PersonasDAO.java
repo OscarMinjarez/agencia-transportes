@@ -67,7 +67,7 @@ public class PersonasDAO implements IPersonasDAO {
             filtros.add(builder.equal(persona.get("rfc"), parametrosPersona.getRfc()));
         }
         
-        criteria.select(persona).where(builder.or(filtros.toArray(Predicate[]::new)));
+        criteria.select(persona).where(builder.and(filtros.toArray(Predicate[]::new)));
         TypedQuery<Persona> query = ENTITY_MANAGER.createQuery(criteria);
         
         this.ENTITY_MANAGER.getTransaction().commit();
