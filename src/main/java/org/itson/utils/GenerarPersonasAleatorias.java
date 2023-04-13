@@ -17,7 +17,7 @@ import org.itson.interfaces.IPersonasDAO;
  * @author Oscar
  */
 public class GenerarPersonasAleatorias {
-    private static final int EDAD_MINIMA = 18;
+    private static final int EDAD_MINIMA = 15;
     private static final int EDAD_MAXIMA = 60;
 
     private static final String[] NOMBRES = {"Juan", "Pedro", "Maria", "Ana", "Luis", "Pablo", "Carlos", "Jorge", "Miguel", "Raul"};
