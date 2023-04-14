@@ -67,7 +67,6 @@ public class PagosDAO implements IPagosDAO {
             return null;
         }
         
-        // TODO: Agregar validaciones y formateo de pago.
         this.ENTITY_MANAGER.getTransaction().begin();
         this.ENTITY_MANAGER.persist(pago);
         this.ENTITY_MANAGER.getTransaction().commit();
