@@ -137,6 +137,7 @@ public class TramitesDAO implements ITramitesDAO {
             return null;
         }
         
+        System.out.println("Salu2");
         this.ENTITY_MANAGER.getTransaction().begin();
         this.ENTITY_MANAGER.persist(tramite);
         this.ENTITY_MANAGER.getTransaction().commit();
