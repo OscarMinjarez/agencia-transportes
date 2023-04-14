@@ -61,7 +61,7 @@ public class BuscarPersona extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.ERROR_MESSAGE);
     }
     
-    public void mostrarPantallaTramitarLicencia() {
+    public void mostrarPantallaAnterior() {
         int opcion = JOptionPane.showConfirmDialog(this, "¿Quieres volver a la pantalla anterior?", "Volver", JOptionPane.YES_NO_OPTION);
         
         if (opcion == JOptionPane.YES_OPTION) {
@@ -357,11 +357,11 @@ public class BuscarPersona extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.mostrarPantallaTramitarLicencia();
+        this.mostrarPantallaAnterior();
     }//GEN-LAST:event_formWindowClosing
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        this.mostrarPantallaTramitarLicencia();
+        this.mostrarPantallaAnterior();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -386,6 +386,8 @@ public class BuscarPersona extends javax.swing.JFrame {
             this.obtenerValorDeLaTabla();
             this.pantallaTramitarLicencia.mostrarDatosPersona();
             this.dispose();
+            this.pantallaTramitarLicencia.comprobarMayorDeEdad();
+            this.pantallaTramitarLicencia.quitarSeleccionRadioButtons();
         } else {
             this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }

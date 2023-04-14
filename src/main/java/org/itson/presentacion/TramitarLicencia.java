@@ -5,10 +5,18 @@
 package org.itson.presentacion;
 
 import java.util.GregorianCalendar;
-import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
+import org.itson.dominio.Licencia;
+import org.itson.dominio.Pago;
 import org.itson.dominio.Persona;
+import org.itson.dominio.Tramite;
+import org.itson.implementaciones.PagosDAO;
+import org.itson.implementaciones.TramitesDAO;
 import org.itson.interfaces.IConexionBD;
+import org.itson.interfaces.IPagosDAO;
+import org.itson.interfaces.ITramitesDAO;
+import org.itson.utils.CostosTramites;
+import org.itson.utils.ManejadorFechas;
 import org.itson.utils.Validaciones;
 
 /**
@@ -18,8 +26,10 @@ import org.itson.utils.Validaciones;
 public class TramitarLicencia extends javax.swing.JFrame {
 
     private final IConexionBD MANEJADOR_CONEXIONES;
-    private final EntityManager ENTITY_MANAGER;
     private Persona persona;
+    
+    private final ITramitesDAO tramitesDAO;
+    private final IPagosDAO pagosDAO;
     
     /**
      * Creates new form TramitarLicencia
@@ -27,9 +37,14 @@ public class TramitarLicencia extends javax.swing.JFrame {
      */
     public TramitarLicencia(IConexionBD MANEJEADOR_CONEXIONES) {
         this.MANEJADOR_CONEXIONES = MANEJEADOR_CONEXIONES;
-        this.ENTITY_MANAGER = this.MANEJADOR_CONEXIONES.crearConexion();
         this.persona = null;
+        this.tramitesDAO = new TramitesDAO(this.MANEJADOR_CONEXIONES);
+        this.pagosDAO = new PagosDAO(this.MANEJADOR_CONEXIONES);
         initComponents();
+    }
+    
+    public void mostrarMensajeDeError(String mensaje, String titulo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.ERROR_MESSAGE);
     }
     
     public void mostrarPantallaBuscarPersona() {
@@ -62,6 +77,82 @@ public class TramitarLicencia extends javax.swing.JFrame {
             this.lblInstruccion.setText("");
         }
     }
+    
+    public void comprobarVigenciaSeleccionada() {
+        if (this.rdUnAnho.isSelected()) {
+            this.lblCantidad.setText(this.persona.getEsDiscapacitado() ? CostosTramites.COSTO_LICENCIA_UN_ANHO_DISCAPACITADO.toString() : CostosTramites.COSTO_LICENCIA_UN_ANHO_NORMAL.toString());
+        } else if (this.rdDosAnhos.isSelected()) {
+            this.lblCantidad.setText(this.persona.getEsDiscapacitado() ? CostosTramites.COSTO_LICENCIA_DOS_ANHOS_DISCAPACITADO.toString() : CostosTramites.COSTO_LICENCIA_DOS_ANHOS_NORMAL.toString());
+        } else if (this.rdTresAnhos.isSelected()) {
+            this.lblCantidad.setText(this.persona.getEsDiscapacitado() ? CostosTramites.COSTO_LICENCIA_TRES_ANHOS_DISCAPACITO.toString() : CostosTramites.COSTO_LICENCIA_TRES_ANHOS_NORMAL.toString());
+        } else {
+            this.lblCantidad.setText("");
+        }
+    }
+    
+    public void actualizarEstadoRadioButtons(boolean x) {
+        this.rdUnAnho.setEnabled(x);
+        this.rdDosAnhos.setEnabled(x);
+        this.rdTresAnhos.setEnabled(x);
+    }
+    
+    public void quitarSeleccionRadioButtons() {
+        this.rdUnAnho.setSelected(false);
+        this.rdDosAnhos.setSelected(false);
+        this.rdTresAnhos.setSelected(false);
+        this.lblCantidad.setText("");
+    }
+    
+    public void comprobarMayorDeEdad() {
+        if (Integer.parseInt(Validaciones.calcularEdad((GregorianCalendar) this.persona.getFechaNacimiento())) >= 18) {
+            this.actualizarEstadoRadioButtons(true);
+            this.btnRegistrarLicencia.setEnabled(true);
+        } else {
+            this.mostrarMensajeDeError("Seleccione a alguien mayor de edad", "Persona menor de edad");
+            this.actualizarEstadoRadioButtons(false);
+            this.btnRegistrarLicencia.setEnabled(false);
+            this.lblCantidad.setText("");
+        }
+    }
+    
+    public void limpiarCamposPersona() {
+        this.lblNombrePersona.setText("");
+        this.lblEdadPersona.setText("");
+        this.lblEsDiscapacitadoPersona.setText("");
+        this.lblRfcPersona.setText("");
+        this.lblInstruccion.setText("Selecciona a una persona para ver su información");
+    }
+    
+    public void insertarLicenciaEnBaseDeDatos() {
+        Float monto = 0f;
+        int vigencia = 0;
+        
+        if (this.rdUnAnho.isSelected()) {
+            monto = this.persona.getEsDiscapacitado() ? CostosTramites.COSTO_LICENCIA_UN_ANHO_DISCAPACITADO : CostosTramites.COSTO_LICENCIA_UN_ANHO_NORMAL;
+            vigencia = 1;
+        } else if (this.rdDosAnhos.isSelected()) {
+            monto = this.persona.getEsDiscapacitado() ? CostosTramites.COSTO_LICENCIA_DOS_ANHOS_DISCAPACITADO : CostosTramites.COSTO_LICENCIA_DOS_ANHOS_NORMAL;
+            vigencia = 2;
+        } else if (this.rdTresAnhos.isSelected()) {
+            monto = this.persona.getEsDiscapacitado() ? CostosTramites.COSTO_LICENCIA_TRES_ANHOS_DISCAPACITO : CostosTramites.COSTO_LICENCIA_TRES_ANHOS_NORMAL;
+            vigencia = 3;
+        }
+        
+        this.pagosDAO.insertar(new Pago(ManejadorFechas.obtenerFechaActual(), monto, this.tramitesDAO.insertar(new Licencia(ManejadorFechas.obtenerFechaActual(), ManejadorFechas.sumarAnios(ManejadorFechas.obtenerFechaActual(), vigencia), monto, this.persona))));
+    }
+    
+    public void confirmarInsertarLicencia() {
+        int opcion1 = JOptionPane.showConfirmDialog(this, "¿Quieres registrar una nueva licencia para " + this.persona.getNombres() + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        
+        if (opcion1 == JOptionPane.YES_OPTION) {
+            this.insertarLicenciaEnBaseDeDatos();
+            this.limpiarCamposPersona();
+            this.quitarSeleccionRadioButtons();
+            this.actualizarEstadoRadioButtons(false);
+            this.btnRegistrarLicencia.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "Se ha registrado exitosamente una nueva licencia para:\n" + this.persona.getNombres(), "¡Éxito!", JOptionPane.DEFAULT_OPTION);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -91,7 +182,7 @@ public class TramitarLicencia extends javax.swing.JFrame {
         rdDosAnhos = new javax.swing.JRadioButton();
         rdTresAnhos = new javax.swing.JRadioButton();
         btnRegistrarLicencia = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tramitar Licencia");
@@ -179,20 +270,42 @@ public class TramitarLicencia extends javax.swing.JFrame {
         lblTotalAPagar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblTotalAPagar.setText("Total a pagar:");
 
-        lblCantidad.setText("NA");
-
         rdUnAnho.setText("1 año");
+        rdUnAnho.setEnabled(false);
+        rdUnAnho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdUnAnhoActionPerformed(evt);
+            }
+        });
 
         rdDosAnhos.setText("2 años");
+        rdDosAnhos.setEnabled(false);
+        rdDosAnhos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdDosAnhosActionPerformed(evt);
+            }
+        });
 
         rdTresAnhos.setText("3 años");
+        rdTresAnhos.setEnabled(false);
+        rdTresAnhos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdTresAnhosActionPerformed(evt);
+            }
+        });
 
         btnRegistrarLicencia.setText("Registrar licencia");
-
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnRegistrarLicencia.setEnabled(false);
+        btnRegistrarLicencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnRegistrarLicenciaActionPerformed(evt);
+            }
+        });
+
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
             }
         });
 
@@ -218,8 +331,8 @@ public class TramitarLicencia extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rdTresAnhos))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRegresar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                         .addComponent(btnRegistrarLicencia))
                     .addComponent(btnBuscarPersona))
                 .addContainerGap())
@@ -249,7 +362,7 @@ public class TramitarLicencia extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrarLicencia)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnRegresar))
                 .addContainerGap())
         );
 
@@ -257,9 +370,9 @@ public class TramitarLicencia extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.mostrarPantallaPrincipal();
-    }//GEN-LAST:event_btnCancelarActionPerformed
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.mostrarPantallaPrincipal();
@@ -269,10 +382,32 @@ public class TramitarLicencia extends javax.swing.JFrame {
         this.mostrarPantallaBuscarPersona();
     }//GEN-LAST:event_btnBuscarPersonaActionPerformed
 
+    private void rdUnAnhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdUnAnhoActionPerformed
+        this.rdDosAnhos.setSelected(false);
+        this.rdTresAnhos.setSelected(false);
+        this.comprobarVigenciaSeleccionada();
+    }//GEN-LAST:event_rdUnAnhoActionPerformed
+
+    private void rdDosAnhosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdDosAnhosActionPerformed
+        this.rdUnAnho.setSelected(false);
+        this.rdTresAnhos.setSelected(false);
+        this.comprobarVigenciaSeleccionada();
+    }//GEN-LAST:event_rdDosAnhosActionPerformed
+
+    private void rdTresAnhosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdTresAnhosActionPerformed
+        this.rdUnAnho.setSelected(false);
+        this.rdDosAnhos.setSelected(false);
+        this.comprobarVigenciaSeleccionada();
+    }//GEN-LAST:event_rdTresAnhosActionPerformed
+
+    private void btnRegistrarLicenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarLicenciaActionPerformed
+        this.confirmarInsertarLicencia();
+    }//GEN-LAST:event_btnRegistrarLicenciaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarPersona;
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRegistrarLicencia;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblEdad;
     private javax.swing.JLabel lblEdadPersona;
