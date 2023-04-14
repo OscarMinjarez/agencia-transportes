@@ -6,11 +6,14 @@ package org.itson.dominio;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +37,10 @@ public class Pago implements Serializable {
     
     @Column(name = "monto")
     private Float monto;
+    
+    @OneToOne()
+    @JoinColumn(name = "id_tramite", nullable = true)
+    protected Tramite tramite;
 
     public Pago() {
     }
@@ -43,10 +50,23 @@ public class Pago implements Serializable {
         this.monto = monto;
     }
 
+    public Pago(Calendar fechaPago, Float monto, Tramite tramite) {
+        this.fechaPago = fechaPago;
+        this.monto = monto;
+        this.tramite = tramite;
+    }
+
     public Pago(Long id, Calendar fechaPago, Float monto) {
         this.id = id;
         this.fechaPago = fechaPago;
         this.monto = monto;
+    }
+
+    public Pago(Long id, Calendar fechaPago, Float monto, Tramite tramite) {
+        this.id = id;
+        this.fechaPago = fechaPago;
+        this.monto = monto;
+        this.tramite = tramite;
     }
 
     public Long getId() {
@@ -73,6 +93,14 @@ public class Pago implements Serializable {
         this.monto = monto;
     }
 
+    public Tramite getTramite() {
+        return tramite;
+    }
+
+    public void setTramite(Tramite tramite) {
+        this.tramite = tramite;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -92,6 +120,6 @@ public class Pago implements Serializable {
 
     @Override
     public String toString() {
-        return "Pago{" + "id=" + id + ", fechaPago=" + fechaPago + ", monto=" + monto + '}';
+        return "Pago{" + "id=" + id + ", fechaPago=" + fechaPago + ", monto=" + monto + ", tramite=" + tramite + '}';
     }
 }

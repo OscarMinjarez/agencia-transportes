@@ -39,6 +39,16 @@ public class Licencia extends Tramite implements Serializable {
         super(id, fechaEmision, monto);
         this.fechaExpedicion = fechaExpedicion;
     }
+
+    public Licencia(Calendar fechaExpedicion, Calendar fechaEmision, Float monto, Persona persona) {
+        super(fechaEmision, monto, persona);
+        this.fechaExpedicion = fechaExpedicion;
+    }
+
+    public Licencia(Calendar fechaExpedicion, Long id, Calendar fechaEmision, Float monto, Persona persona) {
+        super(id, fechaEmision, monto, persona);
+        this.fechaExpedicion = fechaExpedicion;
+    }
     
     public Calendar getFechaExpedicion() {
         return fechaExpedicion;

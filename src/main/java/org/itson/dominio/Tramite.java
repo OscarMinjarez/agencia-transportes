@@ -6,6 +6,7 @@ package org.itson.dominio;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -16,7 +17,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,10 +46,6 @@ public abstract class Tramite implements Serializable {
     @ManyToOne()
     @JoinColumn(name = "id_persona", nullable = true)
     protected Persona persona;
-    
-    @OneToOne()
-    @JoinColumn(name = "id_pago", nullable = true)
-    protected Pago pago;
 
     public Tramite() {
     }
@@ -63,6 +59,19 @@ public abstract class Tramite implements Serializable {
         this.id = id;
         this.fechaEmision = fechaEmision;
         this.monto = monto;
+    }
+
+    public Tramite(Calendar fechaEmision, Float monto, Persona persona) {
+        this.fechaEmision = fechaEmision;
+        this.monto = monto;
+        this.persona = persona;
+    }
+
+    public Tramite(Long id, Calendar fechaEmision, Float monto, Persona persona) {
+        this.id = id;
+        this.fechaEmision = fechaEmision;
+        this.monto = monto;
+        this.persona = persona;
     }
 
     public Long getId() {
@@ -87,14 +96,6 @@ public abstract class Tramite implements Serializable {
 
     public void setMonto(Float monto) {
         this.monto = monto;
-    }
-
-    public Pago getPago() {
-        return pago;
-    }
-
-    public void setPago(Pago pago) {
-        this.pago = pago;
     }
 
     public Persona getPersona() {
@@ -124,6 +125,6 @@ public abstract class Tramite implements Serializable {
 
     @Override
     public String toString() {
-        return "Tramite{" + "id=" + id + ", fechaEmision=" + fechaEmision + ", monto=" + monto + ", persona=" + persona + ", pago=" + pago + '}';
+        return "Tramite{" + "id=" + id + ", fechaEmision=" + fechaEmision + ", monto=" + monto + ", persona=" + persona + '}';
     }
 }

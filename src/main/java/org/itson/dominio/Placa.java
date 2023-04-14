@@ -26,14 +26,14 @@ import org.itson.utils.ManejadorPlacas;
 @DiscriminatorValue(value = "placa")
 public class Placa extends Tramite implements Serializable {
 
-    @Column(name = "texto_placa", nullable = false, length = 7)
+    @Column(name = "texto_placa", nullable = true, length = 7)
     private String textoPlaca;
     
     @Column(name = "fecha_recepcion", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fechaRecepcion;
     
-    @Column(name = "es_activa", nullable = false)
+    @Column(name = "es_activa", nullable = true)
     private Boolean esActiva;
     
     @ManyToOne()
