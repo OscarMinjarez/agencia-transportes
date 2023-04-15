@@ -5,14 +5,17 @@
 package org.itson.implementaciones;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.itson.dominio.Licencia;
+import org.itson.dominio.Persona;
 import org.itson.dominio.Placa;
 import org.itson.dominio.Tramite;
 import org.itson.dto.LicenciasDTO;
@@ -129,6 +132,19 @@ public class TramitesDAO implements ITramitesDAO {
         TypedQuery<Licencia> query = ENTITY_MANAGER.createQuery(criteria);
         
         return query.getResultList();
+    }
+    
+    @Override
+    public Licencia obtenerLicenciaPersona(Persona persona) {
+        CriteriaBuilder builder = this.ENTITY_MANAGER.getCriteriaBuilder();
+        CriteriaQuery<Licencia> criteria = builder.createQuery(Licencia.class);
+        Root<Licencia> licencia = criteria.from(Licencia.class);
+        
+        criteria.select(licencia).where(builder.and(builder.equal(licencia.get("persona"), persona)));
+        
+        List<Licencia> result = this.ENTITY_MANAGER.createQuery(criteria).getResultList();
+        
+        return result.isEmpty() || result.size() <= 0 ? null : result.get(0);
     }
     
     @Override

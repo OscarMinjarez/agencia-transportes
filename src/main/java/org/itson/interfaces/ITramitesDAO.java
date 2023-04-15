@@ -6,6 +6,7 @@ package org.itson.interfaces;
 
 import java.util.List;
 import org.itson.dominio.Licencia;
+import org.itson.dominio.Persona;
 import org.itson.dominio.Placa;
 import org.itson.dominio.Tramite;
 import org.itson.dto.LicenciasDTO;
@@ -21,5 +22,6 @@ public interface ITramitesDAO {
     List<Tramite> buscar(TramitesDTO parametrosTramite);
     List<Placa> buscar(PlacasDTO parametrosPlaca);
     List<Licencia> buscar(LicenciasDTO parametrosLicencia);
+    Tramite obtenerLicenciaPersona(Persona persona);
     Tramite insertar(Tramite tramite);
 }

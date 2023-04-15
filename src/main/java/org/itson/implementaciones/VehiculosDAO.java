@@ -75,16 +75,14 @@ public class VehiculosDAO implements IVehiculosDAO {
 
     @Override
     public Vehiculo insertar(Vehiculo vehiculo) {
-        if (vehiculo != null) {
+        if (vehiculo == null) {
             return null;
         }
         
-         // TODO: Agregar validaciones y formateo de vehiculo.
         this.ENTITY_MANAGER.getTransaction().begin();
         this.ENTITY_MANAGER.persist(vehiculo);
         this.ENTITY_MANAGER.getTransaction().commit();
         
         return vehiculo;
     }
-    
 }
