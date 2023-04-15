@@ -88,6 +88,10 @@ public class BuscarPersona extends javax.swing.JFrame {
                 this.pantallaTramitarLicencia.setEnabled(true);
             }
             
+            if (this.pantallaTramitarPlacaAutoUsado != null) {
+                this.pantallaTramitarPlacaAutoUsado.setEnabled(true);
+            }   
+            
             this.dispose();
         } else {
             this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -194,6 +198,10 @@ public class BuscarPersona extends javax.swing.JFrame {
         
         if (this.pantallaTramitarPlacaAutoNuevo != null) {
             this.pantallaTramitarPlacaAutoNuevo.setPersona(lista.get(0));
+        }
+        
+        if (this.pantallaTramitarPlacaAutoUsado != null) {
+            this.pantallaTramitarPlacaAutoUsado.setPersona(lista.get(0));
         }
     }
 
@@ -395,15 +403,21 @@ public class BuscarPersona extends javax.swing.JFrame {
             
             if (this.pantallaTramitarPlacaAutoNuevo != null) {
                 this.pantallaTramitarPlacaAutoNuevo.setEnabled(true);
-                this.pantallaTramitarPlacaAutoNuevo.comprobarMayorDeEdad();
                 this.pantallaTramitarPlacaAutoNuevo.mostrarDatosPersona();
+                this.pantallaTramitarPlacaAutoNuevo.comprobarMayorDeEdad();
             }
             
             if (this.pantallaTramitarLicencia != null) {
                 this.pantallaTramitarLicencia.setEnabled(true);
-                this.pantallaTramitarLicencia.comprobarMayorDeEdad();
                 this.pantallaTramitarLicencia.quitarSeleccionRadioButtons();
                 this.pantallaTramitarLicencia.mostrarDatosPersona();
+                this.pantallaTramitarLicencia.comprobarMayorDeEdad();
+            }
+            
+            if (this.pantallaTramitarPlacaAutoUsado != null) {
+                this.pantallaTramitarPlacaAutoUsado.setEnabled(true);
+                this.pantallaTramitarPlacaAutoUsado.mostrarDatosPersona();
+                this.pantallaTramitarPlacaAutoUsado.comprobarMayorDeEdad();
             }
             
             this.dispose();
