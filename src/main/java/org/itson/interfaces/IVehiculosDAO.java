@@ -5,7 +5,9 @@
 package org.itson.interfaces;
 
 import java.util.List;
+import org.itson.dominio.Automovil;
 import org.itson.dominio.Vehiculo;
+import org.itson.dto.AutomovilesDTO;
 import org.itson.dto.VehiculosDTO;
 
 /**
@@ -15,5 +17,7 @@ import org.itson.dto.VehiculosDTO;
 public interface IVehiculosDAO {
     Vehiculo buscar(Long id);
     List<Vehiculo> buscar(VehiculosDTO parametrosVehiculo);
+    List<Automovil> buscar(AutomovilesDTO parametrosAutomovil);
     Vehiculo insertar(Vehiculo vehiculo);
+    Vehiculo actualizar(Vehiculo vehiculo);
 }

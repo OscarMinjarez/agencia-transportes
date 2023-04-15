@@ -12,7 +12,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.itson.dominio.Automovil;
 import org.itson.dominio.Vehiculo;
+import org.itson.dto.AutomovilesDTO;
 import org.itson.dto.VehiculosDTO;
 import org.itson.interfaces.IConexionBD;
 import org.itson.interfaces.IVehiculosDAO;
@@ -72,6 +74,43 @@ public class VehiculosDAO implements IVehiculosDAO {
         
         return query.getResultList();
     }
+    
+    @Override
+    public List<Automovil> buscar(AutomovilesDTO parametrosAutomovil) {
+        this.ENTITY_MANAGER.getTransaction().begin();
+
+        CriteriaBuilder builder = ENTITY_MANAGER.getCriteriaBuilder();
+        CriteriaQuery<Automovil> criteria = builder.createQuery(Automovil.class);
+        Root<Automovil> automovil = criteria.from(Automovil.class);
+        List<Predicate> filtros = new ArrayList<>();
+
+        if (parametrosAutomovil.getSerie() != null) {
+            filtros.add(builder.equal(automovil.get("serie"), parametrosAutomovil.getSerie()));
+        }
+
+        if (parametrosAutomovil.getMarca() != null) {
+            filtros.add(builder.equal(automovil.get("marca"), parametrosAutomovil.getMarca()));
+        }
+
+        if (parametrosAutomovil.getLinea() != null) {
+            filtros.add(builder.equal(automovil.get("linea"), parametrosAutomovil.getLinea()));
+        }
+
+        if (parametrosAutomovil.getModelo() != null) {
+            filtros.add(builder.equal(automovil.get("modelo"), parametrosAutomovil.getModelo()));
+        }
+
+        if (parametrosAutomovil.getColor() != null) {
+            filtros.add(builder.equal(automovil.get("color"), parametrosAutomovil.getColor()));
+        }
+
+        criteria.select(automovil).where(builder.or(filtros.toArray(Predicate[]::new)));
+        TypedQuery<Automovil> query = ENTITY_MANAGER.createQuery(criteria);
+
+        this.ENTITY_MANAGER.getTransaction().commit();
+
+        return query.getResultList();
+    }
 
     @Override
     public Vehiculo insertar(Vehiculo vehiculo) {
@@ -81,6 +120,19 @@ public class VehiculosDAO implements IVehiculosDAO {
         
         this.ENTITY_MANAGER.getTransaction().begin();
         this.ENTITY_MANAGER.persist(vehiculo);
+        this.ENTITY_MANAGER.getTransaction().commit();
+        
+        return vehiculo;
+    }
+    
+    @Override
+    public Vehiculo actualizar(Vehiculo vehiculo) {
+        if (vehiculo == null) {
+            return null;
+        }
+        
+        this.ENTITY_MANAGER.getTransaction().begin();
+        this.ENTITY_MANAGER.merge(vehiculo);
         this.ENTITY_MANAGER.getTransaction().commit();
         
         return vehiculo;

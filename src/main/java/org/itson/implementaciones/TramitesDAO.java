@@ -5,13 +5,11 @@
 package org.itson.implementaciones;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.itson.dominio.Licencia;
@@ -153,9 +151,22 @@ public class TramitesDAO implements ITramitesDAO {
             return null;
         }
         
-        System.out.println("Salu2");
         this.ENTITY_MANAGER.getTransaction().begin();
         this.ENTITY_MANAGER.persist(tramite);
+        this.ENTITY_MANAGER.getTransaction().commit();
+        
+        return tramite;
+    }
+    
+    @Override
+    public Tramite actualizar(Tramite tramite) {
+        if (tramite == null) {
+            return null;
+        }
+        
+        System.out.println("Salu2");
+        this.ENTITY_MANAGER.getTransaction().begin();
+        this.ENTITY_MANAGER.merge(tramite);
         this.ENTITY_MANAGER.getTransaction().commit();
         
         return tramite;

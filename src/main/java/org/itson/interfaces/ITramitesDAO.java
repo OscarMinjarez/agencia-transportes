@@ -24,4 +24,5 @@ public interface ITramitesDAO {
     List<Licencia> buscar(LicenciasDTO parametrosLicencia);
     Tramite obtenerLicenciaPersona(Persona persona);
     Tramite insertar(Tramite tramite);
+    Tramite actualizar(Tramite tramite);
 }
