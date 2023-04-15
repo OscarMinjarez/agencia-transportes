@@ -4,7 +4,6 @@
  */
 package org.itson.presentacion;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
@@ -28,7 +27,8 @@ public class BuscarPersona extends javax.swing.JFrame {
 
     private final IConexionBD MANEJADOR_CONEXIONES;
     private final TramitarLicencia pantallaTramitarLicencia;
-    private final JFrame pantalla;
+    private final TramitarPlacaAutoNuevo pantallaTramitarPlacaAutoNuevo;
+    private final TramitarPlacaAutoUsado pantallaTramitarPlacaAutoUsado;
     
     private final IPersonasDAO personasDAO;
     
@@ -38,7 +38,8 @@ public class BuscarPersona extends javax.swing.JFrame {
      * @param pantallaTramitarLicencia
      */
     public BuscarPersona(IConexionBD MANEJADOR_CONEXIONES, TramitarLicencia pantallaTramitarLicencia) {
-        this.pantalla = null;
+        this.pantallaTramitarPlacaAutoNuevo = null;
+        this.pantallaTramitarPlacaAutoUsado = null;
         this.pantallaTramitarLicencia = pantallaTramitarLicencia;
         this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
         
@@ -47,9 +48,21 @@ public class BuscarPersona extends javax.swing.JFrame {
         initComponents();
     }
     
-    public BuscarPersona(IConexionBD MANEJADOR_CONEXIONES, JFrame pantalla) {
+    public BuscarPersona(IConexionBD MANEJADOR_CONEXIONES, TramitarPlacaAutoNuevo pantallaTramitarPlacaAutoNuevo) {
         this.pantallaTramitarLicencia = null;
-        this.pantalla = pantalla;
+        this.pantallaTramitarPlacaAutoUsado = null;
+        this.pantallaTramitarPlacaAutoNuevo = pantallaTramitarPlacaAutoNuevo;
+        this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
+        
+        this.personasDAO = new PersonasDAO(this.MANEJADOR_CONEXIONES);
+        
+        initComponents();
+    }
+    
+    public BuscarPersona(IConexionBD MANEJADOR_CONEXIONES, TramitarPlacaAutoUsado pantallaTramitarPlacaAutoUsado) {
+        this.pantallaTramitarLicencia = null;
+        this.pantallaTramitarPlacaAutoNuevo = null;
+        this.pantallaTramitarPlacaAutoUsado = pantallaTramitarPlacaAutoUsado;
         this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
         
         this.personasDAO = new PersonasDAO(this.MANEJADOR_CONEXIONES);
@@ -67,8 +80,8 @@ public class BuscarPersona extends javax.swing.JFrame {
         if (opcion == JOptionPane.YES_OPTION) {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             
-            if (this.pantalla != null) {
-                this.pantalla.setEnabled(true);
+            if (this.pantallaTramitarPlacaAutoNuevo != null) {
+                this.pantallaTramitarPlacaAutoNuevo.setEnabled(true);
             }
             
             if (this.pantallaTramitarLicencia != null) {
@@ -174,10 +187,14 @@ public class BuscarPersona extends javax.swing.JFrame {
         String rfcPersona = (String) model.getValueAt(filaSeleccionada, 5);
         
         List<Persona> lista = this.personasDAO.buscar(new PersonasDTO(null, null, null, null, rfcPersona));
-
-        System.out.println(lista.get(0));
         
-        this.pantallaTramitarLicencia.setPersona(lista.get(0));
+        if (this.pantallaTramitarLicencia != null) {
+            this.pantallaTramitarLicencia.setPersona(lista.get(0));
+        }
+        
+        if (this.pantallaTramitarPlacaAutoNuevo != null) {
+            this.pantallaTramitarPlacaAutoNuevo.setPersona(lista.get(0));
+        }
     }
 
     /**
@@ -374,20 +391,22 @@ public class BuscarPersona extends javax.swing.JFrame {
         
         if (opcion == JOptionPane.YES_OPTION) {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.obtenerValorDeLaTabla();
             
-            if (this.pantalla != null) {
-                this.pantalla.setEnabled(true);
+            if (this.pantallaTramitarPlacaAutoNuevo != null) {
+                this.pantallaTramitarPlacaAutoNuevo.setEnabled(true);
+                this.pantallaTramitarPlacaAutoNuevo.comprobarMayorDeEdad();
+                this.pantallaTramitarPlacaAutoNuevo.mostrarDatosPersona();
             }
             
             if (this.pantallaTramitarLicencia != null) {
                 this.pantallaTramitarLicencia.setEnabled(true);
+                this.pantallaTramitarLicencia.comprobarMayorDeEdad();
+                this.pantallaTramitarLicencia.quitarSeleccionRadioButtons();
+                this.pantallaTramitarLicencia.mostrarDatosPersona();
             }
             
-            this.obtenerValorDeLaTabla();
-            this.pantallaTramitarLicencia.mostrarDatosPersona();
             this.dispose();
-            this.pantallaTramitarLicencia.comprobarMayorDeEdad();
-            this.pantallaTramitarLicencia.quitarSeleccionRadioButtons();
         } else {
             this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }
