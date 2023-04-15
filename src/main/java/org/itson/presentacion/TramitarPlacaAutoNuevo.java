@@ -4,9 +4,26 @@
  */
 package org.itson.presentacion;
 
-import javax.persistence.EntityManager;
+import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
+import org.itson.dominio.Automovil;
+import org.itson.dominio.Licencia;
+import org.itson.dominio.Pago;
+import org.itson.dominio.Persona;
+import org.itson.dominio.Placa;
+import org.itson.dominio.Tramite;
+import org.itson.dominio.Vehiculo;
+import org.itson.implementaciones.PagosDAO;
+import org.itson.implementaciones.TramitesDAO;
+import org.itson.implementaciones.VehiculosDAO;
 import org.itson.interfaces.IConexionBD;
+import org.itson.interfaces.IPagosDAO;
+import org.itson.interfaces.ITramitesDAO;
+import org.itson.interfaces.IVehiculosDAO;
+import org.itson.utils.Colores;
+import org.itson.utils.CostosTramites;
+import org.itson.utils.ManejadorFechas;
+import org.itson.utils.Validaciones;
 
 /**
  *
@@ -15,16 +32,31 @@ import org.itson.interfaces.IConexionBD;
 public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
 
     private final IConexionBD MANEJADOR_CONEXIONES;
-    private final EntityManager ENTITY_MANAGER;
+    
+    private ITramitesDAO tramitesDAO;
+    private IPagosDAO pagosDAO;
+    private IVehiculosDAO vehiculosDAO;
+    private Persona persona;
     
     /**
      * Creates new form AutoNuevo
-     * @param MANEJEADOR_CONEXIONES
+     * @param MANEJADOR_CONEXIONES
      */
     public TramitarPlacaAutoNuevo(IConexionBD MANEJADOR_CONEXIONES) {
         this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
-        this.ENTITY_MANAGER = this.MANEJADOR_CONEXIONES.crearConexion();
+        this.tramitesDAO = new TramitesDAO(this.MANEJADOR_CONEXIONES);
+        this.pagosDAO = new PagosDAO(this.MANEJADOR_CONEXIONES);
+        this.vehiculosDAO = new VehiculosDAO(this.MANEJADOR_CONEXIONES);
+
         initComponents();
+    }
+    
+    public void mostrarMensajeDeError(String mensaje, String titulo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
     
     public void mostrarPantallaBuscarPersona() {
@@ -42,6 +74,135 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
         } else {
             this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }
+    }
+    
+    public void comprobarMayorDeEdad() {
+        if (Integer.parseInt(Validaciones.calcularEdad((GregorianCalendar) this.persona.getFechaNacimiento())) >= 18) {
+            this.verificarLicenciaExistente();
+        } else {
+            this.mostrarMensajeDeError("Seleccione a alguien mayor de edad", "Persona menor de edad");
+            this.actualizarEstadoDeTxtField(false);
+            this.limpiarTxtFields();
+            this.btnRegistrarAutoNuevo.setEnabled(false);
+            this.lblCantidad.setText("");
+        }
+    }
+    
+    public void mostrarDatosPersona() {
+        if (this.persona != null) {
+            this.lblNombrePersona.setText(persona.getNombres() + " " + this.persona.getApellidoPaterno() + " " + this.persona.getApellidoMaterno());
+            this.lblEdadPersona.setText(Validaciones.calcularEdad((GregorianCalendar) this.persona.getFechaNacimiento()));
+            this.lblRfcPersona.setText(persona.getRfc());
+            this.lblEsDiscapacitadoPersona.setText(this.persona.getEsDiscapacitado() ? "Sí" : "No");
+            this.lblInstruccion.setText("");
+        }
+    }
+    
+    public void mostrarVentanaDeConfirmacion() {
+        int opcion = JOptionPane.showConfirmDialog(this, "Desea registrar la placa y el auto nuevo?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.insertarPlacaAutoNuevo();
+        }
+    }
+    
+    public void verificarLicenciaExistente() {
+        Licencia licencia = (Licencia) tramitesDAO.obtenerLicenciaPersona(this.persona);
+        
+        if (licencia != null) {
+            if (ManejadorFechas.fechaActualEntre(licencia.getFechaEmision(), licencia.getFechaExpiracion())) {
+                this.actualizarEstadoDeTxtField(true);
+                this.lblCantidad.setText(CostosTramites.COSTO_PLACA_AUTO_NUEVO.toString());
+                this.btnRegistrarAutoNuevo.setEnabled(true);
+            }
+        } else {
+            this.mostrarMensajeDeError("La persona seleccionada no tiene licencia o expiró.", "Sin licencia");
+            this.actualizarEstadoDeTxtField(false);
+            this.lblCantidad.setText("");
+            this.btnRegistrarAutoNuevo.setEnabled(false);
+        }
+    }
+    
+    public void actualizarEstadoDeTxtField(boolean x) {
+        this.txtMarca.setEnabled(x);
+        this.txtModelo.setEnabled(x);
+        this.txtLinea.setEnabled(x);
+        this.txtColor.setEnabled(x);
+    }
+    
+    public void limpiarTxtFields() {
+        this.txtMarca.setText("");
+        this.txtModelo.setText("");
+        this.txtLinea.setText("");
+        this.txtColor.setText("");
+    }
+    
+    public boolean validarColor(String color) {
+        for (Colores c : Colores.values()) {
+            if (c.name().equalsIgnoreCase(color)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Automovil extraerDatosAutomovil() {
+        if (!Validaciones.comprobarFormatoAutomovil(this.txtMarca.getText()) && !Validaciones.campoVacio(this.txtMarca.getText())) {
+            this.mostrarMensajeDeError("El formato de la marca no es \nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato invalido");
+            return null;
+        }
+        
+        if (!Validaciones.comprobarFormatoAutomovil(this.txtModelo.getText()) && !Validaciones.campoVacio(this.txtModelo.getText())) {
+            this.mostrarMensajeDeError("El formato del modelo no es válido\nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato invalido");
+            return null;
+        }
+        
+        if (!Validaciones.comprobarFormatoAutomovil(this.txtLinea.getText()) && !Validaciones.campoVacio(this.txtLinea.getText())) {
+            this.mostrarMensajeDeError("El formato de la línea no es válido\nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato invalido");
+            return null;
+        }
+        
+        if (!this.validarColor(this.txtColor.getText()) && !Validaciones.campoVacio(this.txtColor.getText())) {
+            this.mostrarMensajeDeError("El formato del color no es válido\nOpciones disponibles: ROJO, AZUL, VERDE, NEGRO, BLANCO, PLATEADO, DORADO, AMARILLO, ROSA", "Formato invalido");
+            return null;
+        }
+        
+        if (Validaciones.campoVacio(this.txtMarca.getText()) ||
+                Validaciones.campoVacio(this.txtModelo.getText()) ||
+                Validaciones.campoVacio(this.txtLinea.getText()) ||
+                Validaciones.campoVacio(this.txtColor.getText())) {
+            
+            this.mostrarMensajeDeError("Debe llenar al menos un campo", "Campos vacíos");
+
+            return null;
+        } else {
+            return new Automovil(this.txtMarca.getText(), this.txtLinea.getText(), this.txtLinea.getText(), this.txtColor.getText());
+        }
+    }
+    
+    public void insertarPlacaAutoNuevo() {      
+        if (this.extraerDatosAutomovil() == null) {
+            this.mostrarMensajeDeError("No se pudo registrar el auto.", "Error");
+        } else {
+            Vehiculo vehiculo = vehiculosDAO.insertar(this.extraerDatosAutomovil());
+            Placa placa = new Placa(null, true, vehiculo, ManejadorFechas.obtenerFechaActual(), CostosTramites.COSTO_PLACA_AUTO_NUEVO, this.persona);
+            Tramite tramite = this.tramitesDAO.insertar(placa);
+            this.pagosDAO.insertar(new Pago(ManejadorFechas.obtenerFechaActual(), CostosTramites.COSTO_PLACA_AUTO_NUEVO, tramite));
+            
+            this.mostrarDatosCarroRegistrado(placa.getTextoPlaca(), vehiculo.getSerie());
+            this.limpiarTxtFields();
+            this.lblTextoPlaca.setText(placa.getTextoPlaca());
+        }
+    }
+    
+    public void mostrarDatosCarroRegistrado(String textoPlaca, String serie) {
+        JOptionPane.showMessageDialog(this, "Se ha registrado correctamente el automovil con los siguientes datos:"
+                + "\nSerie: " + serie
+                + "\nMarca: " + this.txtMarca.getText()
+                + "\nModelo: " + this.txtModelo.getText()
+                + "\nLínea: " + this.txtLinea.getText()
+                + "\nPlaca: " + textoPlaca, "¡Éxito!", JOptionPane.DEFAULT_OPTION
+        );
     }
 
     /**
@@ -70,15 +231,17 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
         lblColor = new javax.swing.JLabel();
         lblModelo = new javax.swing.JLabel();
         txtMarca = new javax.swing.JTextField();
+        txtModelo = new javax.swing.JTextField();
         txtLinea = new javax.swing.JTextField();
         txtColor = new javax.swing.JTextField();
-        txtModelo = new javax.swing.JTextField();
         lblRegistrarAutoNuevo = new javax.swing.JLabel();
-        lblInformacionPersona = new javax.swing.JLabel();
+        lblInstruccion = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
-        lblTotalCantidad = new javax.swing.JLabel();
-        btnRegistrar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        btnRegistrarAutoNuevo = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
+        lblPlaca = new javax.swing.JLabel();
+        lblTextoPlaca = new javax.swing.JLabel();
+        lblCantidad = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar Auto Nuevo");
@@ -112,14 +275,6 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
 
         lblEsDiscapacitado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblEsDiscapacitado.setText("Es discapacitado:");
-
-        lblNombrePersona.setText("NA");
-
-        lblEdadPersona.setText("NA");
-
-        lblRfcPersona.setText("NA");
-
-        lblEsDiscapacitadoPersona.setText("NA");
 
         javax.swing.GroupLayout paneInfoPersonaLayout = new javax.swing.GroupLayout(paneInfoPersona);
         paneInfoPersona.setLayout(paneInfoPersonaLayout);
@@ -182,6 +337,14 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
         lblModelo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblModelo.setText("Modelo:");
 
+        txtMarca.setEnabled(false);
+
+        txtModelo.setEnabled(false);
+
+        txtLinea.setEnabled(false);
+
+        txtColor.setEnabled(false);
+
         javax.swing.GroupLayout paneInfoAutoLayout = new javax.swing.GroupLayout(paneInfoAuto);
         paneInfoAuto.setLayout(paneInfoAutoLayout);
         paneInfoAutoLayout.setHorizontalGroup(
@@ -194,17 +357,18 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtMarca))
                     .addGroup(paneInfoAutoLayout.createSequentialGroup()
-                        .addComponent(lblLinea)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtLinea))
-                    .addGroup(paneInfoAutoLayout.createSequentialGroup()
                         .addComponent(lblModelo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtModelo))
                     .addGroup(paneInfoAutoLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
                         .addComponent(lblColor)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtColor)))
+                        .addComponent(txtColor))
+                    .addGroup(paneInfoAutoLayout.createSequentialGroup()
+                        .addComponent(lblLinea)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtLinea)))
                 .addContainerGap())
         );
         paneInfoAutoLayout.setVerticalGroup(
@@ -216,59 +380,88 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
                     .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(paneInfoAutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblLinea)
-                    .addComponent(txtLinea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblModelo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(paneInfoAutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtLinea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLinea))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(paneInfoAutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblColor)
                     .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(paneInfoAutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblModelo)
-                    .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         lblRegistrarAutoNuevo.setText("Registrar auto nuevo");
 
-        lblInformacionPersona.setText("Información de la persona");
+        lblInstruccion.setText("Seleccione una persona con licencia");
 
         lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblTotal.setText("Total:");
 
-        lblTotalCantidad.setText("NA");
-
-        btnRegistrar.setText("Registrar");
-
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnRegistrarAutoNuevo.setText("Registrar placa");
+        btnRegistrarAutoNuevo.setEnabled(false);
+        btnRegistrarAutoNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnRegistrarAutoNuevoActionPerformed(evt);
             }
         });
+
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
+        lblPlaca.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblPlaca.setText("Placa registrada:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblInformacionPersona, javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblTramitarPlacaAutoNuevo, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(paneInfoAuto, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBuscarPersona, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(paneInfoPersona, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblRegistrarAutoNuevo, javax.swing.GroupLayout.Alignment.CENTER)
-                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblPlaca)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTextoPlaca))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(lblTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTotalCantidad))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnCancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRegistrar)))
+                        .addComponent(lblCantidad))
+                    .addComponent(lblTramitarPlacaAutoNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(paneInfoAuto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(btnBuscarPersona, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
+            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(paneInfoPersona, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnRegresar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRegistrarAutoNuevo)
+                .addGap(6, 6, 6))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(lblInstruccion))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(88, 88, 88)
+                        .addComponent(lblRegistrarAutoNuevo)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,22 +471,26 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnBuscarPersona)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblInformacionPersona)
+                .addComponent(lblInstruccion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(paneInfoPersona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblRegistrarAutoNuevo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(paneInfoAuto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPlaca)
+                    .addComponent(lblTextoPlaca))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal)
-                    .addComponent(lblTotalCantidad))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lblCantidad))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrar)
-                    .addComponent(btnCancelar))
-                .addContainerGap(8, Short.MAX_VALUE))
+                    .addComponent(btnRegistrarAutoNuevo)
+                    .addComponent(btnRegresar))
+                .addContainerGap())
         );
 
         pack();
@@ -304,34 +501,40 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
         this.mostrarPantallaPrincipal();
     }//GEN-LAST:event_formWindowClosing
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.mostrarPantallaPrincipal();
-    }//GEN-LAST:event_btnCancelarActionPerformed
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnBuscarPersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPersonaActionPerformed
         this.mostrarPantallaBuscarPersona();
     }//GEN-LAST:event_btnBuscarPersonaActionPerformed
 
+    private void btnRegistrarAutoNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAutoNuevoActionPerformed
+        this.mostrarVentanaDeConfirmacion();
+    }//GEN-LAST:event_btnRegistrarAutoNuevoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarPersona;
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JButton btnRegistrarAutoNuevo;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblColor;
     private javax.swing.JLabel lblEdad;
     private javax.swing.JLabel lblEdadPersona;
     private javax.swing.JLabel lblEsDiscapacitado;
     private javax.swing.JLabel lblEsDiscapacitadoPersona;
-    private javax.swing.JLabel lblInformacionPersona;
+    private javax.swing.JLabel lblInstruccion;
     private javax.swing.JLabel lblLinea;
     private javax.swing.JLabel lblMarca;
     private javax.swing.JLabel lblModelo;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombrePersona;
+    private javax.swing.JLabel lblPlaca;
     private javax.swing.JLabel lblRegistrarAutoNuevo;
     private javax.swing.JLabel lblRfc;
     private javax.swing.JLabel lblRfcPersona;
+    private javax.swing.JLabel lblTextoPlaca;
     private javax.swing.JLabel lblTotal;
-    private javax.swing.JLabel lblTotalCantidad;
     private javax.swing.JLabel lblTramitarPlacaAutoNuevo;
     private javax.swing.JPanel paneInfoAuto;
     private javax.swing.JPanel paneInfoPersona;
