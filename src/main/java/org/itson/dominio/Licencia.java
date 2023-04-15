@@ -9,7 +9,6 @@ import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -18,13 +17,12 @@ import javax.persistence.TemporalType;
  * @author Oscar
  */
 @Entity
-@Table(name = "licencias")
-@DiscriminatorValue(value = "licencia")
+@DiscriminatorValue("licencia")
 public class Licencia extends Tramite implements Serializable {
 
-    @Column(name = "fecha_expedicion", nullable = false)
+    @Column(name = "fecha_expiracion", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar fechaExpedicion;
+    private Calendar fechaExpiracion;
 
     public Licencia() {
         super();
@@ -32,30 +30,30 @@ public class Licencia extends Tramite implements Serializable {
 
     public Licencia(Calendar fechaExpedicion, Calendar fechaEmision, Float monto) {
         super(fechaEmision, monto);
-        this.fechaExpedicion = fechaExpedicion;
+        this.fechaExpiracion = fechaExpedicion;
     }
 
     public Licencia(Calendar fechaExpedicion, Long id, Calendar fechaEmision, Float monto) {
         super(id, fechaEmision, monto);
-        this.fechaExpedicion = fechaExpedicion;
+        this.fechaExpiracion = fechaExpedicion;
     }
 
     public Licencia(Calendar fechaExpedicion, Calendar fechaEmision, Float monto, Persona persona) {
         super(fechaEmision, monto, persona);
-        this.fechaExpedicion = fechaExpedicion;
+        this.fechaExpiracion = fechaExpedicion;
     }
 
     public Licencia(Calendar fechaExpedicion, Long id, Calendar fechaEmision, Float monto, Persona persona) {
         super(id, fechaEmision, monto, persona);
-        this.fechaExpedicion = fechaExpedicion;
+        this.fechaExpiracion = fechaExpedicion;
     }
     
-    public Calendar getFechaExpedicion() {
-        return fechaExpedicion;
+    public Calendar getFechaExpiracion() {
+        return fechaExpiracion;
     }
 
-    public void setFechaExpedicion(Calendar fechaExpedicion) {
-        this.fechaExpedicion = fechaExpedicion;
+    public void setFechaExpiracion(Calendar fechaExpiracion) {
+        this.fechaExpiracion = fechaExpiracion;
     }
 
     @Override
@@ -77,6 +75,6 @@ public class Licencia extends Tramite implements Serializable {
 
     @Override
     public String toString() {
-        return "Licencia{" + "fechaExpedicion=" + fechaExpedicion + '}';
+        return "Licencia{" + "fechaExpedicion=" + fechaExpiracion + '}';
     }
 }

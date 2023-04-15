@@ -6,12 +6,12 @@ package org.itson.dominio;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,7 +23,7 @@ import org.itson.utils.ManejadorPlacas;
  */
 @Entity
 @Table(name = "placas")
-@DiscriminatorValue(value = "placa")
+@DiscriminatorValue("placa")
 public class Placa extends Tramite implements Serializable {
 
     @Column(name = "texto_placa", nullable = true, length = 7)
@@ -61,6 +61,22 @@ public class Placa extends Tramite implements Serializable {
 
     public Placa(Calendar fechaRecepcion, Boolean esActiva, Vehiculo vehiculo, Long id, Calendar fechaEmision, Float monto) {
         super(id, fechaEmision, monto);
+        this.fechaRecepcion = fechaRecepcion;
+        this.esActiva = esActiva;
+        this.vehiculo = vehiculo;
+        this.setTextoPlaca();
+    }
+
+    public Placa(Calendar fechaRecepcion, Boolean esActiva, Vehiculo vehiculo, Calendar fechaEmision, Float monto, Persona persona) {
+        super(fechaEmision, monto, persona);
+        this.fechaRecepcion = fechaRecepcion;
+        this.esActiva = esActiva;
+        this.vehiculo = vehiculo;
+        this.setTextoPlaca();
+    }
+
+    public Placa(Calendar fechaRecepcion, Boolean esActiva, Vehiculo vehiculo, Long id, Calendar fechaEmision, Float monto, Persona persona) {
+        super(id, fechaEmision, monto, persona);
         this.fechaRecepcion = fechaRecepcion;
         this.esActiva = esActiva;
         this.vehiculo = vehiculo;

@@ -22,12 +22,12 @@ public class Automovil extends Vehiculo implements Serializable {
         super();
     }
 
-    public Automovil(String serie, String marca, String linea, String modelo, String color) {
-        super(serie, marca, linea, modelo, color);
+    public Automovil(String marca, String linea, String modelo, String color) {
+        super( marca, linea, modelo, color);
     }
 
-    public Automovil(Long id, String serie, String marca, String linea, String modelo, String color) {
-        super(id, serie, marca, linea, modelo, color);
+    public Automovil(Long id, String marca, String linea, String modelo, String color) {
+        super(id, marca, linea, modelo, color);
     }
     
     @Override
@@ -61,5 +61,4 @@ public class Automovil extends Vehiculo implements Serializable {
     public String toString() {
         return "org.itson.dominio.Automovil[ id=" + id + " ]";
     }
-    
 }
