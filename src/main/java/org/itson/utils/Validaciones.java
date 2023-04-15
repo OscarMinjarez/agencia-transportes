@@ -62,4 +62,9 @@ public class Validaciones {
 
         return Integer.toString(edad);
     }
+    
+    public static boolean comprobarFormatoAutomovil(String cadena) {
+        String regex = "^[a-zA-Z0-9\\-]+$";
+        return cadena.matches(regex);
+    }
 }
