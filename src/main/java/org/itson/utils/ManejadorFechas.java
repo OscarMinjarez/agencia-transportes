@@ -27,4 +27,9 @@ public class ManejadorFechas {
         
         return fecha;
     }
+    
+    public static boolean fechaActualEntre(Calendar fechaInicio, Calendar fechaFin) {
+        Calendar fechaActual = Calendar.getInstance();
+        return fechaActual.compareTo(fechaInicio) >= 0 && fechaActual.compareTo(fechaFin) <= 0;
+    }
 }
