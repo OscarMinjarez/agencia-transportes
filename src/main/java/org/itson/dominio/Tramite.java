@@ -6,7 +6,6 @@ package org.itson.dominio;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -36,11 +35,11 @@ public abstract class Tramite implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     
-    @Column(name = "fecha_emision", nullable = false)
+    @Column(name = "fecha_emision", nullable = true)
     @Temporal(TemporalType.DATE)
     protected Calendar fechaEmision;
     
-    @Column(name = "monto", nullable = false)
+    @Column(name = "monto", nullable = true)
     protected Float monto;
     
     @ManyToOne()

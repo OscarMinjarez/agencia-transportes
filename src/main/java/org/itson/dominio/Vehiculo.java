@@ -17,6 +17,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.itson.utils.ManejadorNumeroDeSerie;
 
 /**
  *
@@ -54,21 +55,21 @@ public abstract class Vehiculo implements Serializable {
     public Vehiculo() {
     }
 
-    public Vehiculo(String serie, String marca, String linea, String modelo, String color) {
-        this.serie = serie;
+    public Vehiculo(String marca, String linea, String modelo, String color) {
         this.marca = marca;
         this.linea = linea;
         this.modelo = modelo;
         this.color = color;
+        this.setSerie();
     }
 
-    public Vehiculo(Long id, String serie, String marca, String linea, String modelo, String color) {
+    public Vehiculo(Long id, String marca, String linea, String modelo, String color) {
         this.id = id;
-        this.serie = serie;
         this.marca = marca;
         this.linea = linea;
         this.modelo = modelo;
         this.color = color;
+        this.setSerie();
     }
     
     public Long getId() {
@@ -79,12 +80,8 @@ public abstract class Vehiculo implements Serializable {
         this.id = id;
     }
 
-    public String getSerie() {
-        return serie;
-    }
-
-    public void setSerie(String serie) {
-        this.serie = serie;
+    public final void setSerie() {
+        this.serie = ManejadorNumeroDeSerie.generarNumeroSerie();
     }
 
     public String getMarca() {
@@ -101,6 +98,10 @@ public abstract class Vehiculo implements Serializable {
 
     public void setLinea(String linea) {
         this.linea = linea;
+    }
+
+    public String getSerie() {
+        return serie;
     }
 
     public String getModelo() {
