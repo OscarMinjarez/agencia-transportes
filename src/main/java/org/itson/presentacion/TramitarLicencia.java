@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import org.itson.dominio.Licencia;
 import org.itson.dominio.Pago;
 import org.itson.dominio.Persona;
-import org.itson.dominio.Tramite;
 import org.itson.implementaciones.PagosDAO;
 import org.itson.implementaciones.TramitesDAO;
 import org.itson.interfaces.IConexionBD;
@@ -138,7 +137,7 @@ public class TramitarLicencia extends javax.swing.JFrame {
             vigencia = 3;
         }
         
-        this.pagosDAO.insertar(new Pago(ManejadorFechas.obtenerFechaActual(), monto, this.tramitesDAO.insertar(new Licencia(ManejadorFechas.obtenerFechaActual(), ManejadorFechas.sumarAnios(ManejadorFechas.obtenerFechaActual(), vigencia), monto, this.persona))));
+        this.pagosDAO.insertar(new Pago(ManejadorFechas.obtenerFechaActual(), monto, this.tramitesDAO.insertar(new Licencia(ManejadorFechas.sumarAnios(ManejadorFechas.obtenerFechaActual(), vigencia), ManejadorFechas.obtenerFechaActual(), monto, this.persona))));
     }
     
     public void confirmarInsertarLicencia() {
