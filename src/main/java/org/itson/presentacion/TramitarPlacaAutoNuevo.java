@@ -148,22 +148,22 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
     
     public Automovil extraerDatosAutomovil() {
         if (!Validaciones.comprobarFormatoAutomovil(this.txtMarca.getText()) && !Validaciones.campoVacio(this.txtMarca.getText())) {
-            this.mostrarMensajeDeError("El formato de la marca no es \nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato invalido");
+            this.mostrarMensajeDeError("El formato de la marca no es válido\nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato inválido");
             return null;
         }
         
-        if (!Validaciones.comprobarFormatoAutomovil(this.txtModelo.getText()) && !Validaciones.campoVacio(this.txtModelo.getText())) {
-            this.mostrarMensajeDeError("El formato del modelo no es válido\nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato invalido");
+        if (!Validaciones.comprobarFormatoAnho(this.txtModelo.getText()) && !Validaciones.campoVacio(this.txtModelo.getText())) {
+            this.mostrarMensajeDeError("El formato del modelo no es válido\nSólo se aceptan 4 dígitos numéricos", "Formato inválido");
             return null;
         }
         
         if (!Validaciones.comprobarFormatoAutomovil(this.txtLinea.getText()) && !Validaciones.campoVacio(this.txtLinea.getText())) {
-            this.mostrarMensajeDeError("El formato de la línea no es válido\nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato invalido");
+            this.mostrarMensajeDeError("El formato de la línea no es válido\nSólo se aceptan letras, números y/o el símbolo de \"-\"", "Formato inválido");
             return null;
         }
         
         if (!this.validarColor(this.txtColor.getText()) && !Validaciones.campoVacio(this.txtColor.getText())) {
-            this.mostrarMensajeDeError("El formato del color no es válido\nOpciones disponibles: ROJO, AZUL, VERDE, NEGRO, BLANCO, PLATEADO, DORADO, AMARILLO, ROSA", "Formato invalido");
+            this.mostrarMensajeDeError("El formato del color no es válido\nOpciones disponibles: ROJO, AZUL, VERDE, NEGRO, BLANCO, PLATEADO, DORADO, AMARILLO, ROSA", "Formato inválido");
             return null;
         }
         
@@ -176,7 +176,7 @@ public class TramitarPlacaAutoNuevo extends javax.swing.JFrame {
 
             return null;
         } else {
-            return new Automovil(this.txtMarca.getText(), this.txtLinea.getText(), this.txtLinea.getText(), this.txtColor.getText());
+            return new Automovil(this.txtMarca.getText(), this.txtLinea.getText(), this.txtModelo.getText(), this.txtColor.getText());
         }
     }
     
