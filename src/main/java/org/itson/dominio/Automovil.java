@@ -59,6 +59,6 @@ public class Automovil extends Vehiculo implements Serializable {
 
     @Override
     public String toString() {
-        return "org.itson.dominio.Automovil[ id=" + id + " ]";
+        return super.toString() + "org.itson.dominio.Automovil[ id=" + id + " ]";
     }
 }
