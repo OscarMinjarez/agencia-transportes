@@ -28,47 +28,38 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="lblTramitarPlacaAutoNuevo" alignment="2" max="32767" attributes="0"/>
+                  <Component id="paneInfoAuto" alignment="2" max="32767" attributes="0"/>
+                  <Component id="btnBuscarPersona" alignment="2" max="32767" attributes="0"/>
+                  <Component id="paneInfoPersona" alignment="2" max="32767" attributes="0"/>
+                  <Group type="102" alignment="2" attributes="0">
+                      <Component id="lblBuscarAuto" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnBuscarAuto" max="32767" attributes="0"/>
+                      <Component id="txtPlaca" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Component id="btnBuscarAuto" alignment="2" max="32767" attributes="0"/>
+                  <Group type="102" alignment="2" attributes="0">
+                      <Component id="lblPlaca" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblTramitarPlacaAutoNuevo" alignment="2" max="32767" attributes="0"/>
-                          <Component id="btnBuscarPersona" alignment="2" max="32767" attributes="0"/>
-                          <Component id="paneInfoPersona" alignment="2" max="32767" attributes="0"/>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="btnRegistrar" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="paneInfoAuto" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblBuscarAuto" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtBuscarAuto" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lblInformacionAutoUsado" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblInformacionPersona" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="lblTextoPlaca" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
+                  <Component id="lblInformacionAutoUsado" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblInstruccion" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="2" attributes="0">
                       <Component id="lblTotal" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblTotalCantidad" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+                      <Component id="lblCantidad" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="2" attributes="0">
+                      <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="btnRegistrarAutoUsado" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -80,28 +71,33 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="btnBuscarPersona" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="lblInformacionPersona" min="-2" max="-2" attributes="0"/>
+              <Component id="lblInstruccion" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="paneInfoPersona" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="lblInformacionAutoUsado" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lblBuscarAuto" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtBuscarAuto" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtPlaca" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="btnBuscarAuto" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="paneInfoAuto" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblPlaca" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTextoPlaca" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lblTotal" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblTotalCantidad" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblCantidad" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnRegistrar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnRegistrarAutoUsado" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -115,7 +111,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="JetBrains Mono" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Tramitar Placa Auto Nuevo"/>
+        <Property name="text" type="java.lang.String" value="Tramitar Placa Auto Usado"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnBuscarPersona">
@@ -228,24 +224,12 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblNombrePersona">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblEdadPersona">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblRfcPersona">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblEsDiscapacitadoPersona">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
@@ -265,14 +249,14 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="lblModelo" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblModeloVehiculo" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
                           <Component id="lblColor" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lblColorVehiculo" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="lblLinea" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblLineaVehiculo" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="lblMarca" min="-2" max="-2" attributes="0"/>
@@ -280,9 +264,9 @@
                           <Component id="lblMarcaVehiculo" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblLinea" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblModelo" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblLineaVehiculo" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblModeloVehiculo" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -299,6 +283,11 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblModelo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblModeloVehiculo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblLinea" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblLineaVehiculo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -306,11 +295,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblColor" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblColorVehiculo" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblModelo" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblModeloVehiculo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="9" max="32767" attributes="0"/>
               </Group>
@@ -326,12 +310,20 @@
             <Property name="text" type="java.lang.String" value="Marca:"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JLabel" name="lblModelo">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Modelo:"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JLabel" name="lblLinea">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="12" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Linea:"/>
+            <Property name="text" type="java.lang.String" value="L&#xed;nea:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblColor">
@@ -342,33 +334,13 @@
             <Property name="text" type="java.lang.String" value="Color:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblModelo">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="1"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Modelo:"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="lblMarcaVehiculo">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblLineaVehiculo">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblColorVehiculo">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblModeloVehiculo">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="NA"/>
-          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblLineaVehiculo">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblColorVehiculo">
         </Component>
       </SubComponents>
     </Container>
@@ -377,9 +349,9 @@
         <Property name="text" type="java.lang.String" value="Informaci&#xf3;n auto usado"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblInformacionPersona">
+    <Component class="javax.swing.JLabel" name="lblInstruccion">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Informaci&#xf3;n de la persona"/>
+        <Property name="text" type="java.lang.String" value="Selecciona a una persona con licencia"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblTotal">
@@ -390,15 +362,14 @@
         <Property name="text" type="java.lang.String" value="Total:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblTotalCantidad">
+    <Component class="javax.swing.JButton" name="btnRegistrarAutoUsado">
       <Properties>
-        <Property name="text" type="java.lang.String" value="NA"/>
+        <Property name="text" type="java.lang.String" value="Registrar automovil"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnRegistrar">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Registrar"/>
-      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegistrarAutoUsadoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCancelar">
       <Properties>
@@ -413,12 +384,31 @@
         <Property name="text" type="java.lang.String" value="Buscar auto por placa:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtBuscarAuto">
+    <Component class="javax.swing.JTextField" name="txtPlaca">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnBuscarAuto">
       <Properties>
         <Property name="text" type="java.lang.String" value="Buscar auto"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarAutoActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPlaca">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="12" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Placa registrada:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTextoPlaca">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblCantidad">
     </Component>
   </SubComponents>
 </Form>
