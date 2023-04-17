@@ -40,6 +40,23 @@ public class TramitesDAO implements ITramitesDAO {
     public Tramite buscar(Long id) {
         return this.ENTITY_MANAGER.find(Tramite.class, id);
     }
+    
+    @Override
+    public List<Tramite> buscar() {
+        this.ENTITY_MANAGER.getTransaction().begin();
+        
+        CriteriaBuilder builder = this.ENTITY_MANAGER.getCriteriaBuilder();
+        CriteriaQuery<Tramite> criteria = builder.createQuery(Tramite.class);
+        Root<Tramite> tramite = criteria.from(Tramite.class);
+        
+        criteria.select(tramite);
+        
+        this.ENTITY_MANAGER.getTransaction().commit();
+        
+        TypedQuery<Tramite> query = this.ENTITY_MANAGER.createQuery(criteria);
+        
+        return query.getResultList();
+    }
 
     @Override
     public List<Tramite> buscar(TramitesDTO parametrosTramite) {

@@ -19,6 +19,7 @@ import org.itson.dto.TramitesDTO;
  */
 public interface ITramitesDAO {
     Tramite buscar(Long id);
+    List<Tramite> buscar();
     List<Tramite> buscar(TramitesDTO parametrosTramite);
     List<Placa> buscar(PlacasDTO parametrosPlaca);
     List<Licencia> buscar(LicenciasDTO parametrosLicencia);
