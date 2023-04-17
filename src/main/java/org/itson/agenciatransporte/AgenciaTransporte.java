@@ -5,7 +5,6 @@
 package org.itson.agenciatransporte;
 
 import org.itson.implementaciones.ConexionBD;
-import org.itson.interfaces.IConexionBD;
 import org.itson.presentacion.PantallaPrincipal;
 
 /**
@@ -15,8 +14,6 @@ import org.itson.presentacion.PantallaPrincipal;
 public class AgenciaTransporte {
 
     public static void main(String[] args) {
-        IConexionBD conexion = new ConexionBD("org.itson_AgenciaTransporte");
-        
-        new PantallaPrincipal(conexion).setVisible(true);
+        new PantallaPrincipal(new ConexionBD("org.itson_AgenciaTransporte")).setVisible(true);
     }
 }
