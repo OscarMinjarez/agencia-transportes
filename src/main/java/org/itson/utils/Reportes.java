@@ -1,58 +1,68 @@
 package org.itson.utils;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import org.itson.dominio.Persona;
 import org.itson.interfaces.IConexionBD;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
-import org.itson.dominio.Licencia;
-import org.itson.dominio.Placa;
+import org.itson.dominio.Persona;
 import org.itson.dominio.Tramite;
+import org.itson.dto.PersonasDTO;
+import org.itson.implementaciones.PersonasDAO;
+import org.itson.interfaces.IPersonasDAO;
 
 public class Reportes {
 
     private final IConexionBD MANEJADOR_CONEXIONES;
-    private final EntityManager ENTITY_MANAGER;
 
     public Reportes(IConexionBD MANEJADOR_CONEXIONES) {
         this.MANEJADOR_CONEXIONES = MANEJADOR_CONEXIONES;
-        this.ENTITY_MANAGER = this.MANEJADOR_CONEXIONES.crearConexion();
     }
 
-    public List<Tramite> reporteTramites() {
-        CriteriaBuilder builder = this.ENTITY_MANAGER.getCriteriaBuilder();
-        CriteriaQuery<Tramite> criteriaQuery = builder.createQuery(Tramite.class);
-        Root<Persona> personaRoot = criteriaQuery.from(Persona.class);
-        Join<Persona, Tramite> tramiteJoin = personaRoot.join("tramites", JoinType.INNER);
-
-        criteriaQuery.select(tramiteJoin);
-        return this.ENTITY_MANAGER.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<Persona> reportePlacas() {
-        CriteriaBuilder builder = this.ENTITY_MANAGER.getCriteriaBuilder();
-        CriteriaQuery<Persona> criteria = builder.createQuery(Persona.class);
-        Root<Persona> persona = criteria.from(Persona.class);
-        Join<Persona, Placa> placas = persona.join("placas");
+    public List<Tramite> consultarReporte(PersonasDTO parametrosPersona, Calendar desde, Calendar hasta) {
+        IPersonasDAO personasDAO = new PersonasDAO(this.MANEJADOR_CONEXIONES);
         
-        criteria.select(persona);
+        if (parametrosPersona == null) {
+            parametrosPersona = new PersonasDTO();
+        }
         
-        return this.ENTITY_MANAGER.createQuery(criteria).getResultList();
+        List<Persona> personas = personasDAO.buscar(parametrosPersona);
+        
+        if (personas.size() <= 0 || personas.isEmpty()) {
+            return null;
+        }
+        
+        if (desde != null && hasta != null) {
+            return this.filtrarTramitesPorPeriodo(personas, desde, hasta);
+        }
+        
+        return this.filtrarTramitesPorPersonas(personas);
     }
     
-    public List<Persona> reporteLicencias() {
-        CriteriaBuilder builder = this.ENTITY_MANAGER.getCriteriaBuilder();
-        CriteriaQuery<Persona> criteria = builder.createQuery(Persona.class);
-        Root<Persona> persona = criteria.from(Persona.class);
-        Join<Persona, Licencia> licencias = persona.join("licencias");
+    private List<Tramite> filtrarTramitesPorPersonas(List<Persona> listaPersonas) {
+        List<Tramite> tramitesFiltrados = new ArrayList<>();
         
-        criteria.select(persona);
+        for (Persona persona : listaPersonas) {
+            for (Tramite tramite : persona.getTramites()) {
+                tramitesFiltrados.add(tramite);
+            }
+        }
         
-        return this.ENTITY_MANAGER.createQuery(criteria).getResultList();
+        return tramitesFiltrados;
+    }
+    
+    private List<Tramite> filtrarTramitesPorPeriodo(List<Persona> listaPersonas, Calendar desde, Calendar hasta) {
+        List<Tramite> tramitesFiltrados = new ArrayList<>();
+        
+        for (Persona persona : listaPersonas) {
+            for (Tramite tramite : persona.getTramites()) {
+                if (ManejadorFechas.estaEnPeriodo(tramite.getFechaEmision(), desde, hasta)) {
+                    tramitesFiltrados.add(tramite);
+                }
+            }
+        }
+        
+        return tramitesFiltrados;
     }
 }
