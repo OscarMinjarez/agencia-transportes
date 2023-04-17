@@ -181,7 +181,7 @@ public class TramitarPlacaAutoUsado extends javax.swing.JFrame {
             this.mostrarMensajeDeError("No se pudo registrar la placa.", "Error");
         } else {
             this.desactivarPlaca();
-            Placa placa = new Placa(null, true, this.vehiculo, ManejadorFechas.obtenerFechaActual(), CostosTramites.COSTO_PLACA_AUTO_NUEVO, this.persona);
+            Placa placa = new Placa(null, true, this.vehiculo, ManejadorFechas.obtenerFechaActual(), CostosTramites.COSTO_PLACA_AUTO_USADO, this.persona);
             Tramite tramite = this.tramitesDAO.insertar(placa);
             this.pagosDAO.insertar(new Pago(ManejadorFechas.obtenerFechaActual(), CostosTramites.COSTO_PLACA_AUTO_USADO, tramite));
             
