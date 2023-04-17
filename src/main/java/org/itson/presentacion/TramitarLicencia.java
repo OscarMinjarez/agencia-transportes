@@ -144,13 +144,36 @@ public class TramitarLicencia extends javax.swing.JFrame {
         int opcion1 = JOptionPane.showConfirmDialog(this, "¿Quieres registrar una nueva licencia para " + this.persona.getNombres() + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
         
         if (opcion1 == JOptionPane.YES_OPTION) {
-            this.insertarLicenciaEnBaseDeDatos();
-            this.limpiarCamposPersona();
-            this.quitarSeleccionRadioButtons();
+            if (!this.verificarLicenciaExistente()) {
+                if (this.verificarRadioButtonsSeleccionados()) {
+                    this.insertarLicenciaEnBaseDeDatos();
+                    this.limpiarCamposPersona();
+                    this.quitarSeleccionRadioButtons();
+                    this.actualizarEstadoRadioButtons(false);
+                    this.btnRegistrarLicencia.setEnabled(false);
+                    JOptionPane.showMessageDialog(this, "Se ha registrado exitosamente una nueva licencia para:\n" + this.persona.getNombres(), "¡Éxito!", JOptionPane.DEFAULT_OPTION);
+                } else {
+                    this.mostrarMensajeDeError("Selecciona una vigencia", "Error");
+                }
+            }
+        }
+    }
+    
+    public boolean verificarLicenciaExistente() {
+        Licencia licencia = (Licencia) tramitesDAO.obtenerLicenciaPersona(this.persona);
+        
+        if (licencia != null) {
+            this.mostrarMensajeDeError("Esta persona ya tiene una licencia vigente", "Licencia vigente");
             this.actualizarEstadoRadioButtons(false);
             this.btnRegistrarLicencia.setEnabled(false);
-            JOptionPane.showMessageDialog(this, "Se ha registrado exitosamente una nueva licencia para:\n" + this.persona.getNombres(), "¡Éxito!", JOptionPane.DEFAULT_OPTION);
+            return true;
         }
+        
+        return false;
+    }
+    
+    public boolean verificarRadioButtonsSeleccionados() {
+        return this.rdUnAnho.isSelected() || this.rdDosAnhos.isSelected() || this.rdTresAnhos.isSelected();
     }
 
     /**
