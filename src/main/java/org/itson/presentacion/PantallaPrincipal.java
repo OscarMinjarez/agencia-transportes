@@ -44,6 +44,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         new TramitarPlacaAutoUsado(this.MANEJADOR_CONEXIONES).setVisible(true);
         this.dispose();
     }
+    
+    public void mostrarPantallaReportes() {
+        new ReportesDeTramites(this.MANEJADOR_CONEXIONES).setVisible(true);
+        this.dispose();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -164,7 +169,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTramitarLicenciasActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
-        // TODO add your handling code here:
+        this.mostrarPantallaReportes();
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void btnTramitarPlacaAutoNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTramitarPlacaAutoNuevoActionPerformed
